@@ -1,35 +1,25 @@
-'use client'
 import React from 'react';
-import Form from '../../components/Form';
-import styles from "../src/app/page.module.css";
 import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function Page() {
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      backgroundColor: 'white',
-      backgroundRepeat: 'no-repeat'
-    }}>
-      
-      <Link href="/register-delivery">
-        Go to Delivery Person Registration 
-      </Link>
-
-      <Link href="/login-delivery">Login Delivery </Link>
-
-      {/* <Link href="/delivery-form">
-        Go to Delivery Form
-      </Link> */}
-      <Link href="/register-client">
-        Go to Delivery Person Registration
-      </Link>
-      <Link href="/login-client">
-        Client Login
-      </Link>
+    <div className={styles.pageContainer}>
+      <h1>Welcome to Our Service</h1>
+      <nav className={styles.navigation}>
+        <Link href="/register-delivery" legacyBehavior>
+          <a className={styles.link}>Register Delivery Person</a>
+        </Link>
+        <Link href="/login-delivery" legacyBehavior>
+          <a className={styles.link}>Login as Delivery Person</a>
+        </Link>
+        <Link href="/register-client" legacyBehavior>
+          <a className={styles.link}>Register Client</a>
+        </Link>
+        <Link href="/login-client" legacyBehavior>
+          <a className={styles.link}>Client Login</a>
+        </Link>
+      </nav>
     </div>
   );
 }
