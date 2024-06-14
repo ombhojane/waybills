@@ -276,6 +276,28 @@
   flex-direction: row;
   justify-content: start;
 }
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button, .form button {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.button:hover, .form button:hover {
+  background-color: #0051bb;
+}
+
 
 .form {
   display: flex;

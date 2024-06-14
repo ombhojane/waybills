@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from "./client.module.css";
+import styless from "../src/app/page.module.css";
 
 interface DataItem {
   serialNumber: string;
@@ -36,7 +37,7 @@ export default function ClientPage() {
 
   return (
     <div>
-      <h1>Client Dashboard</h1>
+      <h1 className={styless.title}>Client Dashboard</h1>
       <table className={styles.table}>
         <thead>
           <tr>

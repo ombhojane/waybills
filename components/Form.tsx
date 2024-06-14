@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import styles from "../src/app/page.module.css";
 import React from "react";
+import { useRouter } from 'next/router';
+
 
 export default function Form() {
   const [formData, setFormData] = useState({
@@ -15,27 +17,50 @@ export default function Form() {
     courierCompany: ''
   });
 
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState('');
+  const router = useRouter();
+
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const response = await fetch('/api/submitForm', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      console.log('Data sent');
-    } else {
-      console.error('Error sending data');
+    setLoading(true);
+    setStatus('');
+    try {
+      const response = await fetch('/api/submitForm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+  
+      if (response.ok) {
+        setStatus('Success: Data submitted successfully.');
+        setFormData({
+          serialNumber: '',
+          name: '',
+          city: '',
+          waybillNo: '',
+          sender: '',
+          department: '',
+          noOfDocuments: '',
+          weight: '',
+          courierCompany: ''
+        }); // Reset form
+      } else {
+        setStatus('Failure: Error in sending data.');
+      }
+    } catch (error) {
+      setStatus('Failure: Network or server error.');
+      console.error('Error sending data', error);
     }
+    setLoading(false);
   };
+  
 
   return (
     <div className={styles.container}>
@@ -77,8 +102,35 @@ export default function Form() {
   Courier company
   <input type="text" value={formData.courierCompany} onChange={handleChange} name="courierCompany" pattern="[A-Za-z\s]*" required />
 </label>
-        <button type="submit">Submit</button>
+<button type="submit" disabled={loading}>
+          {loading ? 'Please wait...' : 'Submit'}
+        </button>
       </form>
+      <p>{status}</p>
+      {!loading && status === 'Success: Data submitted successfully.' && (
+  <div>
+    <button onClick={() => router.push('/delivery-dashboard')}>
+      Return to Dashboard
+    </button>
+    <button onClick={() => {
+      setFormData({
+        serialNumber: '',
+        name: '',
+        city: '',
+        waybillNo: '',
+        sender: '',
+        department: '',
+        noOfDocuments: '',
+        weight: '',
+        courierCompany: ''
+      });
+      setStatus('');
+    }}>
+      Add More Waybills
+    </button>
+  </div>
+)}
+
     </div>
   );
 }

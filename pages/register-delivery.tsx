@@ -9,7 +9,7 @@ export default function RegisterDelivery() {
     email: '',
     password: '',
   });
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,12 +18,14 @@ export default function RegisterDelivery() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post('/api/register', formData);
+      setLoading(false);
       console.log(response.data); // { token: '...' }
-      // handle successful registration (e.g., redirect, show message, etc.)
-      router.push('/delivery-form');
+      router.push('/delivery-dashboard'); // Redirect to the delivery dashboard
     } catch (error) {
+      setLoading(false);
       console.error(error);
       // handle error (e.g., show error message)
     }
@@ -46,8 +48,7 @@ export default function RegisterDelivery() {
             Password
             <input type="password" value={formData.password} onChange={handleChange} name="password" required />
           </label>
-          {/* add other fields as necessary */}
-          <button type="submit">Register</button>
+          <button type="submit" disabled={loading}>{loading ? 'Please wait...' : 'Register'}</button>
         </form>
       </div>
     </div>
