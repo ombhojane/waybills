@@ -1,4 +1,3 @@
-// pages/api/submitForm.ts
 import { MongoClient } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -7,21 +6,17 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { serialNumber, name, city, waybillNo, sender, department, noOfDocuments, weight, courierCompany } = req.body;
+    const {
+      srNo, date, toName, branch, podNo, senderName, department, particular,
+      noOfEnvelopes, weight, rates, dpartner, deliveryDate
+    } = req.body;
 
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
     const db = client.db(process.env.DB_NAME);
 
     await db.collection('waybills').insertOne({
-      serialNumber,
-      name,
-      city,
-      waybillNo,
-      sender,
-      department,
-      noOfDocuments,
-      weight,
-      courierCompany
+      srNo, date, toName, branch, podNo, senderName, department, particular,
+      noOfEnvelopes, weight, rates, dpartner, deliveryDate
     });
 
     client.close();
