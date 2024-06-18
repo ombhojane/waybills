@@ -4,12 +4,18 @@ import styles from "./client.module.css";
 import styless from "../src/app/page.module.css";
 
 interface DataItem {
-  serialNumber: string;
-  sender: string;
-  waybillNo: string;
-  noOfDocuments: string;
+  srNo: string; // Changed from serialNumber to srNo to match DeliveryDashboard
+  date: string; // Adding date to match the schema
+  toName: string; // Changed from sender to toName to match DeliveryDashboard
+  branch: string; // Adding branch to match the schema
+  podNo: string; // Changed from waybillNo to podNo to match DeliveryDashboard
+  department: string; // Adding department to match the schema
+  particular: string; // Adding particular to match the schema
+  noOfEnvelopes: string; // Changed from noOfDocuments to noOfEnvelopes to match DeliveryDashboard
   weight: string;
-  courierCompany: string;
+  rates: string; // Adding rates to match the schema
+  bluedart: string; // Changed courierCompany to bluedart to match DeliveryDashboard
+  deliveryDate: string; // Adding deliveryDate to match the schema
 }
 
 export default function ClientPage() {
@@ -41,23 +47,35 @@ export default function ClientPage() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Serial Number</th>
-            <th>Sender Name</th>
-            <th>Waybill Number</th>
-            <th>Documents</th>
-            <th>Weight (kg)</th>
-            <th>Courier Partner</th>
+            <th>Sr No</th>
+            <th>Date</th>
+            <th>To Name</th>
+            <th>Branch</th>
+            <th>POD No</th>
+            <th>Department</th>
+            <th>Particular</th>
+            <th>No of Envelopes</th>
+            <th>Weight</th>
+            <th>Rates</th>
+            <th>Bluedart</th>
+            <th>Delivery Date</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.serialNumber}</td>
-              <td>{item.sender}</td>
-              <td>{item.waybillNo}</td>
-              <td>{item.noOfDocuments}</td>
+              <td>{item.srNo}</td>
+              <td>{item.date}</td>
+              <td>{item.toName}</td>
+              <td>{item.branch}</td>
+              <td>{item.podNo}</td>
+              <td>{item.department}</td>
+              <td>{item.particular}</td>
+              <td>{item.noOfEnvelopes}</td>
               <td>{item.weight}</td>
-              <td>{item.courierCompany}</td>
+              <td>{item.rates}</td>
+              <td>{item.bluedart}</td>
+              <td>{item.deliveryDate}</td>
             </tr>
           ))}
         </tbody>

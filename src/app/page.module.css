@@ -258,31 +258,80 @@
   to {
     transform: rotate(0deg);
   }
-}
-
-.container {
+}.container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: white;
   font-family: 'Open Sans', sans-serif;
+  padding: 20px;
 }
-.formHeader {
+
+.formTitle {
   font-size: 2rem;
   margin-bottom: 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.formRow h3 {
+  flex: 0 0 30%;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.formInput {
+  flex: 0 0 65%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.formButton {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: white;
+  background-color: #0070f3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+}
+
+.formButton:hover {
+  background-color: #0051bb;
+}
+
+.statusMessage {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
 .buttonGroup {
   display: flex;
   gap: 10px;
   margin-top: 20px;
 }
 
-.button, .form button {
+.dashboardButton,
+.addMoreButton {
   padding: 10px 15px;
   font-size: 16px;
   color: white;
@@ -293,46 +342,22 @@
   transition: background-color 0.3s ease;
 }
 
-
-.button:hover, .form button:hover {
+.dashboardButton:hover,
+.addMoreButton:hover {
   background-color: #0051bb;
 }
 
+@media (max-width: 768px) {
+  .formRow {
+    flex-direction: column;
+    gap: 5px;
+  }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+  .formRow h3 {
+    flex: 0 0 100%;
+  }
 
-.form label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-.form label input {
-  flex-grow: 1;
-  margin-left: 10px;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.form button {
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 1rem;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.form button:hover {
-  background-color: #0051bb;
+  .formInput {
+    flex: 0 0 100%;
+  }
 }
