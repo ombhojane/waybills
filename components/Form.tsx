@@ -3,31 +3,33 @@ import styles from "../src/app/page.module.css";
 import React from "react";
 import { useRouter } from 'next/router';
 
-
 export default function Form() {
   const [formData, setFormData] = useState({
-    serialNumber: '',
-    name: '',
-    city: '',
-    waybillNo: '',
-    sender: '',
+    srNo: '',
+    date: '',
+    toName: '',
+    branch: '',
+    podNo: '',
+    senderName: '',
     department: '',
-    noOfDocuments: '',
-    weight: '',
-    courierCompany: ''
+    perticular: '',
+    noOfEnvelopes: '',
+    waight: '',
+    rates: '',
+    dpartner: '',
+    deliveryDate: ''
   });
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const router = useRouter();
 
-
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setStatus('');
@@ -37,19 +39,13 @@ export default function Form() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-  
+
       if (response.ok) {
         setStatus('Success: Data submitted successfully.');
         setFormData({
-          serialNumber: '',
-          name: '',
-          city: '',
-          waybillNo: '',
-          sender: '',
-          department: '',
-          noOfDocuments: '',
-          weight: '',
-          courierCompany: ''
+          srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
+          department: '', perticular: '', noOfEnvelopes: '', waight: '', rates: '',
+          dpartner: '', deliveryDate: ''
         }); // Reset form
       } else {
         setStatus('Failure: Error in sending data.');
@@ -60,77 +56,47 @@ export default function Form() {
     }
     setLoading(false);
   };
-  
 
   return (
     <div className={styles.container}>
       <h4 className={styles.formHeader}>Waybill Form</h4>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <label>
-          Serial No.
-          <input type="number" value={formData.serialNumber} onChange={handleChange} name="serialNumber" pattern="\d*" required />
-        </label>
-        <label>
-          Name
-          <input type="text" value={formData.name} onChange={handleChange} name="name" pattern="[A-Za-z\s]*" required />
-        </label>
-        <label>
-          City
-          <input type="text" value={formData.city} onChange={handleChange} name="city" pattern="[A-Za-z\s]*" required />
-        </label>
-        <label>
-  Waybill no
-  <input type="text" value={formData.waybillNo} onChange={handleChange} name="waybillNo" pattern="[A-Za-z0-9]*" required />
-</label>
-<label>
-  Sender
-  <input type="text" value={formData.sender} onChange={handleChange} name="sender" pattern="[A-Za-z\s]*" required />
-</label>
-<label>
-  Department
-  <input type="text" value={formData.department} onChange={handleChange} name="department" pattern="[A-Za-z\s]*" required />
-</label>
-<label>
-  No of documents
-  <input type="text" value={formData.noOfDocuments} onChange={handleChange} name="noOfDocuments" pattern="\d*" required />
-</label>
-<label>
-  Weight
-  <input type="number" value={formData.weight} onChange={handleChange} name="weight" pattern="\d*\.?\d*" required />
-</label>
-<label>
-  Courier company
-  <input type="text" value={formData.courierCompany} onChange={handleChange} name="courierCompany" pattern="[A-Za-z\s]*" required />
-</label>
-<button type="submit" disabled={loading}>
+        {Object.entries(formData).map(([key, value]) => (
+          <label key={key} className={styles.formLabel}>
+            {key.replace(/([A-Z])/g, ' $1').trim()}
+            <input
+              className={styles.formInput}
+              type={['date', 'deliveryDate'].includes(key) ? 'date' : 'text'}
+              value={value}
+              onChange={handleChange}
+              name={key}
+              pattern={key === 'srNo' || key === 'noOfEnvelopes' || key === 'waight' || key === 'rates' ? '\\d*' : undefined}
+              required
+            />
+          </label>
+        ))}
+        <button type="submit" disabled={loading} className={styles.formButton}>
           {loading ? 'Please wait...' : 'Submit'}
         </button>
       </form>
-      <p>{status}</p>
+      <p className={styles.statusMessage}>{status}</p>
       {!loading && status === 'Success: Data submitted successfully.' && (
-  <div>
-    <button onClick={() => router.push('/delivery-dashboard')}>
-      Return to Dashboard
-    </button>
-    <button onClick={() => {
-      setFormData({
-        serialNumber: '',
-        name: '',
-        city: '',
-        waybillNo: '',
-        sender: '',
-        department: '',
-        noOfDocuments: '',
-        weight: '',
-        courierCompany: ''
-      });
-      setStatus('');
-    }}>
-      Add More Waybills
-    </button>
-  </div>
-)}
-
+        <div className={styles.buttonGroup}>
+          <button onClick={() => router.push('/delivery-dashboard')} className={styles.dashboardButton}>
+            Return to Dashboard
+          </button>
+          <button onClick={() => {
+            setFormData({
+              srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
+              department: '', perticular: '', noOfEnvelopes: '', waight: '', rates: '',
+              dpartner: '', deliveryDate: ''
+            });
+            setStatus('');
+          }} className={styles.addMoreButton}>
+            Add More Waybills
+          </button>
+        </div>
+      )}
     </div>
   );
 }
