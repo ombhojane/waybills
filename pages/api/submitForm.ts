@@ -7,16 +7,16 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const {
-      srNo, date, toName, branch, podNo, senderName, department, perticular,
-      noOfEnvelopes, waight, rates, dpartner, deliveryDate
+      srNo, date, toName, branch, podNo, senderName, department, particular,
+      noOfEnvelopes, weight, rates, dpartner, deliveryDate
     } = req.body;
 
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
     const db = client.db(process.env.DB_NAME);
 
     await db.collection('waybills').insertOne({
-      srNo, date, toName, branch, podNo, senderName, department, perticular,
-      noOfEnvelopes, waight, rates, dpartner, deliveryDate
+      srNo, date, toName, branch, podNo, senderName, department, particular,
+      noOfEnvelopes, weight, rates, dpartner, deliveryDate
     });
 
     client.close();

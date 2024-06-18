@@ -12,9 +12,9 @@ export default function Form() {
     podNo: '',
     senderName: '',
     department: '',
-    perticular: '',
+    particular: '',
     noOfEnvelopes: '',
-    waight: '',
+    weight: '',
     rates: '',
     dpartner: '',
     deliveryDate: ''
@@ -44,7 +44,7 @@ export default function Form() {
         setStatus('Success: Data submitted successfully.');
         setFormData({
           srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
-          department: '', perticular: '', noOfEnvelopes: '', waight: '', rates: '',
+          department: '', particular: '', noOfEnvelopes: '', weight: '', rates: '',
           dpartner: '', deliveryDate: ''
         }); // Reset form
       } else {
@@ -57,20 +57,34 @@ export default function Form() {
     setLoading(false);
   };
 
+  // Helper function to format labels
+  const formatLabel = (label: string) => {
+    return label
+      // Split based on uppercase letters
+      .replace(/([A-Z])/g, ' $1')
+      // Trim leading space and replace underscores with spaces
+      .replace(/_/g, ' ')
+      // Capitalize each word
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ marginTop: '20px', marginBottom: '20px' }}>
+      <h1 className={styles.formTitle}>Add a New Waybill</h1>
       <h4 className={styles.formHeader}>Waybill Form</h4>
       <form className={styles.form} onSubmit={handleSubmit}>
         {Object.entries(formData).map(([key, value]) => (
           <label key={key} className={styles.formLabel}>
-            {key.replace(/([A-Z])/g, ' $1').trim()}
+            {formatLabel(key)}
             <input
               className={styles.formInput}
               type={['date', 'deliveryDate'].includes(key) ? 'date' : 'text'}
               value={value}
               onChange={handleChange}
               name={key}
-              pattern={key === 'srNo' || key === 'noOfEnvelopes' || key === 'waight' || key === 'rates' ? '\\d*' : undefined}
+              pattern={key === 'srNo' || key === 'noOfEnvelopes' || key === 'weight' || key === 'rates' ? '\\d*' : undefined}
               required
             />
           </label>
@@ -88,7 +102,7 @@ export default function Form() {
           <button onClick={() => {
             setFormData({
               srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
-              department: '', perticular: '', noOfEnvelopes: '', waight: '', rates: '',
+              department: '', particular: '', noOfEnvelopes: '', weight: '', rates: '',
               dpartner: '', deliveryDate: ''
             });
             setStatus('');

@@ -12,13 +12,13 @@ interface DataItem {
   podNo: string;
   senderName: string;
   department: string;
-  perticular: string;
+  particular: string; // Corrected spelling from 'perticular' to 'particular'
   noOfEnvelopes: string;
-  waight: string;
+  weight: string; // Corrected spelling from 'waight' to 'weight'
   rates: string;
   bluedart: string;
   deliveryDate: string;
-  [key: string]: string; // Add index signature
+  [key: string]: string; // Index signature
 }
 
 export default function DeliveryDashboard() {
@@ -28,17 +28,17 @@ export default function DeliveryDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<DataItem[]>('/api/data');
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get<DataItem[]>('/api/data');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleEditClick = (item: DataItem) => {
     setEditId(item._id);
@@ -75,12 +75,29 @@ export default function DeliveryDashboard() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
+      try {
+        const response = await axios.delete('/api/deleteAll');
+        alert(response.data.message);
+        fetchData(); // Refresh data after deletion
+      } catch (error) {
+        alert('Failed to delete data');
+        console.error('Error while deleting data:', error);
+      }
+    }
+  };
+
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Delivery Dashboard</h1>
       <div className={styles.buttonContainer}>
         <button className={styles.addButton} onClick={() => router.push('/delivery-form')}>
           Add New Waybill
+        </button>
+        <button className={styles.deleteButton} onClick={handleDeleteAll}>
+          Delete All Data
         </button>
       </div>
 
@@ -127,8 +144,8 @@ export default function DeliveryDashboard() {
                   </>
                 ) : (
                   <>
-                    {Object.values(item).map((value, idx) => (
-                      <td key={idx}>{value}</td>
+                    {Object.entries(item).map(([key, value], idx) => (
+                      key !== '_id' && <td key={idx}>{value}</td>
                     ))}
                     <td>
                       <button onClick={() => handleEditClick(item)}>Edit</button>
