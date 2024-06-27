@@ -2,9 +2,25 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+interface WaybillData {
+    srNo: string;
+    date: string;
+    toName: string;
+    branch: string;
+    podNo: string;
+    senderName: string;
+    department: string;
+    particular: string;
+    noOfEnvelopes: string;
+    weight: string;
+    rates: string;
+    deliveryStatus: string;
+    }
+    
+
 const FeedbackPage = () => {
-  const [waybill, setWaybill] = useState<{ deliveryStatus: string } | null>(null);
-  const [error, setError] = useState('');
+const [waybill, setWaybill] = useState<WaybillData | null>(null);
+ const [error, setError] = useState('');
   const router = useRouter();
   const { id } = router.query;
 
@@ -41,6 +57,17 @@ const FeedbackPage = () => {
   return (
     <div>
       <h1>Waybill Details</h1>
+      <p><strong>Waybill Number:</strong> {waybill.srNo}</p>
+      <p><strong>Date:</strong> {waybill.date}</p>
+      <p><strong>To Name:</strong> {waybill.toName}</p>
+      <p><strong>Branch:</strong> {waybill.branch}</p>
+      <p><strong>POD Number:</strong> {waybill.podNo}</p>
+      <p><strong>Sender Name:</strong> {waybill.senderName}</p>
+      <p><strong>Department:</strong> {waybill.department}</p>
+      <p><strong>Particulars:</strong> {waybill.particular}</p>
+      <p><strong>No of Envelopes:</strong> {waybill.noOfEnvelopes}</p>
+      <p><strong>Weight:</strong> {waybill.weight}</p>
+      <p><strong>Rates:</strong> {waybill.rates}</p>
       <p><strong>Delivery Status:</strong> {waybill.deliveryStatus}</p>
       {waybill.deliveryStatus !== 'Delivered' && (
         <button onClick={updateDeliveryStatus}>Mark as Delivered</button>
