@@ -123,6 +123,7 @@ export default function DeliveryDashboard() {
               <th>Rates</th>
               <th>Bluedart</th>
               <th>Delivery Date</th>
+              <th>Delivery Status</th>
               <th>Actions</th>
             </tr>
           </thead>

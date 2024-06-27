@@ -3,22 +3,23 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 interface WaybillData {
-  _id: string;
-  srNo: string;
-  date: string;
-  toName: string;
-  branch: string;
-  podNo: string;
-  senderName: string;
-  department: string;
-  particular: string;
-  noOfEnvelopes: string;
-  weight: string;
-  rates: string;
-  dpartner: string;
-  deliveryDate: string;
-  clientEmail: string;
-}
+    _id: string;
+    srNo: string;
+    date: string;
+    toName: string;
+    branch: string;
+    podNo: string;
+    senderName: string;
+    department: string;
+    particular: string;
+    noOfEnvelopes: string;
+    weight: string;
+    rates: string;
+    dpartner: string;
+    deliveryDate: string;
+    clientEmail: string;
+    }
+    
 
 const FeedbackPage = () => {
   const [waybill, setWaybill] = useState<WaybillData | null>(null);
@@ -45,7 +46,7 @@ const FeedbackPage = () => {
   };
 
   const handleSubmitFeedback = async () => {
-    if (!waybill || !waybill._id) return;
+    if (!waybill) return;
     try {
       const response = await axios.post(`/api/feedback/${waybill._id}`, {
         rating,
@@ -59,7 +60,7 @@ const FeedbackPage = () => {
     }
   };
 
-  const canSubmitFeedback = waybill && new Date(waybill.deliveryDate) <= new Date();
+  const canSubmitFeedback = new Date(waybill?.deliveryDate ?? '') <= new Date();
 
   if (error) return <div>{error}</div>;
   if (!waybill) return <div>Loading...</div>;
