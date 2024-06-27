@@ -17,9 +17,10 @@
       weight: '',
       rates: '',
       dpartner: '',
-      deliveryDate: ''
+      deliveryDate: '',
+      clientEmail: ''  // New field for client email
     });
-
+    
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState('');
     const router = useRouter();
@@ -45,7 +46,7 @@
           setFormData({
             srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
             department: '', particular: '', noOfEnvelopes: '', weight: '', rates: '',
-            dpartner: '', deliveryDate: ''
+            dpartner: '', deliveryDate: '', clientEmail: ''
           }); // Reset form
         } else {
           setStatus('Failure: Error in sending data.');
@@ -82,7 +83,7 @@
               name="date"
               required
             />
-            <h3>To Name</h3>
+            <h3>Client Name</h3>
             <input
               className={styles.formInput}
               type="text"
@@ -92,6 +93,17 @@
               required
             />
           </div>
+          <div className={styles.formRow}>
+          <h3>Client Email</h3>
+          <input
+            className={styles.formInput}
+            type="email"
+            value={formData.clientEmail}
+            onChange={handleChange}
+            name="clientEmail"
+            required
+          />
+        </div>
           <div className={styles.formRow}>
             <h3>Branch</h3>
             <input
@@ -210,7 +222,7 @@
               setFormData({
                 srNo: '', date: '', toName: '', branch: '', podNo: '', senderName: '',
                 department: '', particular: '', noOfEnvelopes: '', weight: '', rates: '',
-                dpartner: '', deliveryDate: ''
+                dpartner: '', deliveryDate: '', clientEmail: ''
               });
               setStatus('');
             }} className={styles.addMoreButton}>
