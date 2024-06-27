@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 
@@ -16,13 +16,14 @@ export default async function handler(
   } = req.body;
 
   // MongoDB Connection and Data Insertion
+  let insertResult;
   try {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
     const db = client.db(process.env.DB_NAME);
 
-    await db.collection('waybills').insertOne({
+    insertResult = await db.collection('waybills').insertOne({
       srNo, date, toName, branch, podNo, senderName, department, particular,
-      noOfEnvelopes, weight, rates, dpartner, deliveryDate
+      noOfEnvelopes, weight, rates, dpartner, deliveryDate, deliveryStatus: 'In Transit' // Initial status
     });
 
     client.close();
@@ -34,22 +35,25 @@ export default async function handler(
   // Email Sending Setup
   try {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',  // Assuming Gmail for this example
+      service: 'gmail',
       auth: {
-        user: "ombhojane05@gmail.com", // Use environment variables
+        user: "ombhojane05@gmail.com",
         pass: "kzez kudy toxu oqoj"
       }
     });
 
+    const feedbackUrl = `https://waybills.vercel.app/feedback/${insertResult.insertedId}`;
+
     const mailOptions = {
-      from: "ombhojane05@gmail.com",
+      from: process.env.EMAIL_USER,
       to: clientEmail,
       subject: 'New Waybill Submission Confirmation',
-      text: `Dear ${toName},\n\nA new waybill has been submitted with the following details:\n\n` +
-            `Waybill Number: ${srNo}\nDate: ${date}\nBranch: ${branch}\nPOD Number: ${podNo}\n` +
-            `Sender Name: ${senderName}\nDepartment: ${department}\nParticulars: ${particular}\n` +
-            `Delivery Partner: ${dpartner}\nExpected Delivery Date: ${deliveryDate}\n\n` +
-            `Please review the details and contact us if there are any issues.\n\nBest regards,\nMNCL`
+      html: `Dear ${toName},<br><br>A new waybill has been submitted with the following details:<br><br>` +
+            `Waybill Number: ${srNo}<br>Date: ${date}<br>Branch: ${branch}<br>POD Number: ${podNo}<br>` +
+            `Sender Name: ${senderName}<br>Department: ${department}<br>Particulars: ${particular}<br>` +
+            `Delivery Partner: ${dpartner}<br>Expected Delivery Date: ${deliveryDate}<br><br>` +
+            `Please review the details and provide feedback: <a href="${feedbackUrl}">Click here</a><br><br>` +
+            `Best regards,<br>MNCL`
     };
 
     await transporter.sendMail(mailOptions);
