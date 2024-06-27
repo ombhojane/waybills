@@ -3,22 +3,24 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 
 interface WaybillData {
-  srNo: string;
-  date: string;
-  toName: string;
-  branch: string;
-  podNo: string;
-  senderName: string;
-  department: string;
-  particular: string;
-  noOfEnvelopes: string;
-  weight: string;
-  rates: string;
-  deliveryStatus: string;
-}
+    srNo: string;
+    date: string;
+    toName: string;
+    branch: string;
+    podNo: string;
+    senderName: string;
+    department: string;
+    particular: string;
+    noOfEnvelopes: string;
+    weight: string;
+    rates: string;
+    deliveryStatus: string;
+    }
+
 
 const FeedbackPage = () => {
   const [waybill, setWaybill] = useState<WaybillData | null>(null);
+  const [error, setError] = useState('');
   const router = useRouter();
   const { id } = router.query;
 
@@ -30,13 +32,26 @@ const FeedbackPage = () => {
 
   const fetchWaybillData = async (id: string) => {
     try {
-      const response = await axios.get<WaybillData>(`/api/waybill/${id}`);
+      const response = await axios.get(`/api/waybill/${id}`);
       setWaybill(response.data);
     } catch (error) {
       console.error('Error fetching waybill:', error);
+      setError('Failed to fetch waybill. Please check if the waybill ID is correct or try again later.');
     }
   };
 
+  const updateDeliveryStatus = async () => {
+    try {
+      const response = await axios.put(`/api/waybill/updateStatus/${id}`);
+      alert(response.data.message);
+      fetchWaybillData(id as string); // Refetch waybill data to update the UI
+    } catch (error) {
+      console.error('Error updating delivery status:', error);
+      alert('Failed to update delivery status. Please try again.');
+    }
+  };
+
+  if (error) return <div>{error}</div>;
   if (!waybill) return <div>Loading...</div>;
 
   return (
@@ -54,6 +69,9 @@ const FeedbackPage = () => {
       <p><strong>Weight:</strong> {waybill.weight}</p>
       <p><strong>Rates:</strong> {waybill.rates}</p>
       <p><strong>Delivery Status:</strong> {waybill.deliveryStatus}</p>
+      {waybill.deliveryStatus !== 'Delivered' && (
+        <button onClick={updateDeliveryStatus}>Mark as Delivered</button>
+      )}
     </div>
   );
 };
