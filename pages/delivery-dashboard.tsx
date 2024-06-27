@@ -58,22 +58,26 @@ export default function DeliveryDashboard() {
   };
 
   const handleSave = async () => {
-    if (editFormData && editId) {
-      try {
-        const response = await axios.put('/api/updateData', {
-          id: editId,
-          updatedData: editFormData
-        });
-        alert(response.data.message);
-        const newData = data.map(item => (item._id === editId ? editFormData : item));
-        setData(newData);
-        handleCancel();
-      } catch (error) {
-        alert('Failed to update data');
-        console.error('Error while updating data', error);
-      }
+    if (!editFormData || !editId) return;
+  
+    const { _id, ...dataWithoutId } = editFormData; // Destructure to separate _id from the rest of the data
+  
+    try {
+      const response = await axios.put('/api/updateData', {
+        id: editId,
+        updatedData: dataWithoutId  // Send without _id
+      });
+      alert(response.data.message);
+      const newData = data.map(item => (item._id === editId ? { ...item, ...editFormData } : item));
+      setData(newData);
+      handleCancel();
+    } catch (error) {
+      alert('Failed to update data');
+      console.error('Error while updating data:', error);
     }
   };
+  
+
 
   const handleDeleteAll = async () => {
     if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
