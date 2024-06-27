@@ -5,24 +5,35 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.query;
-
-  if (!ObjectId.isValid(id as string)) {
-    return res.status(400).json({ message: 'Invalid ID provided' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
   }
+
+  const { id } = req.query;
+  const { rating, feedbackMessage } = req.body;
 
   try {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
     const db = client.db(process.env.DB_NAME);
-    const waybill = await db.collection('waybills').findOne({ _id: new ObjectId(id as string) });
+    const result = await db.collection('waybills').updateOne(
+      { _id: new ObjectId(id as string) },
+      {
+        $set: {
+          deliveryStatus: 'Delivered',
+          rating,
+          feedbackMessage
+        }
+      }
+    );
 
-    if (!waybill) {
-      return res.status(404).json({ message: 'Waybill not found' });
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: 'Waybill not found or no update needed' });
     }
 
-    res.status(200).json(waybill);
+    res.status(200).json({ message: 'Feedback submitted successfully' });
+    client.close();
   } catch (error) {
-    console.error('Database connection error:', error);
-    res.status(500).json({ message: 'Failed to connect to database', error: error.message });
+    console.error('Database update error:', error);
+    res.status(500).json({ message: 'Failed to update waybill', error: error.message });
   }
 }
