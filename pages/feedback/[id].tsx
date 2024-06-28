@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+
 interface WaybillData {
     srNo: string;
     date: string;
@@ -15,12 +16,15 @@ interface WaybillData {
     weight: string;
     rates: string;
     deliveryStatus: string;
+    deliveryDate: string;
     }
     
 
 const FeedbackPage = () => {
-const [waybill, setWaybill] = useState<WaybillData | null>(null);
- const [error, setError] = useState('');
+    const [waybill, setWaybill] = useState<WaybillData | null>(null);
+    const [error, setError] = useState('');
+  const [rating, setRating] = useState(0);
+  const [message, setMessage] = useState('');
   const router = useRouter();
   const { id } = router.query;
 
@@ -40,19 +44,22 @@ const [waybill, setWaybill] = useState<WaybillData | null>(null);
     }
   };
 
-  const updateDeliveryStatus = async () => {
+  const submitFeedback = async () => {
     try {
-      const response = await axios.put(`/api/waybill/updateStatus/${id}`);
+      const response = await axios.post(`/api/waybill/submitFeedback/${id}`, { rating, message });
       alert(response.data.message);
       fetchWaybillData(id as string); // Refetch waybill data to update the UI
     } catch (error) {
-      console.error('Error updating delivery status:', error);
-      alert('Failed to update delivery status. Please try again.');
+      console.error('Error submitting feedback:', error);
+      alert('Failed to submit feedback. Please try again.');
     }
   };
 
   if (error) return <div>{error}</div>;
   if (!waybill) return <div>Loading...</div>;
+
+  const today = new Date();
+  const deliveryDate = new Date(waybill.deliveryDate);
 
   return (
     <div>
@@ -68,9 +75,23 @@ const [waybill, setWaybill] = useState<WaybillData | null>(null);
       <p><strong>No of Envelopes:</strong> {waybill.noOfEnvelopes}</p>
       <p><strong>Weight:</strong> {waybill.weight}</p>
       <p><strong>Rates:</strong> {waybill.rates}</p>
+    
       <p><strong>Delivery Status:</strong> {waybill.deliveryStatus}</p>
-      {waybill.deliveryStatus !== 'Delivered' && (
-        <button onClick={updateDeliveryStatus}>Mark as Delivered</button>
+      {deliveryDate <= today && (
+        <div>
+          <h2>Feedback</h2>
+          <div>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button key={star} onClick={() => setRating(star)}>{star <= rating ? '★' : '☆'}</button>
+            ))}
+          </div>
+          <textarea
+            placeholder="Leave a feedback message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          ></textarea>
+          <button onClick={submitFeedback}>Submit Feedback</button>
+        </div>
       )}
     </div>
   );
