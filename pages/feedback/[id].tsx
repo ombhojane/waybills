@@ -18,7 +18,7 @@ interface WaybillData {
     deliveryStatus: string;
     deliveryDate: string;
     }
-    
+
 
 const FeedbackPage = () => {
     const [waybill, setWaybill] = useState<WaybillData | null>(null);
@@ -48,7 +48,7 @@ const FeedbackPage = () => {
     try {
       const response = await axios.post(`/api/waybill/submitFeedback/${id}`, { rating, message });
       alert(response.data.message);
-      fetchWaybillData(id as string); // Refetch waybill data to update the UI
+      fetchWaybillData(id as string);
     } catch (error) {
       console.error('Error submitting feedback:', error);
       alert('Failed to submit feedback. Please try again.');
