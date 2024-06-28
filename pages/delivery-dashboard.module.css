@@ -6,28 +6,41 @@
   .title {
     margin-bottom: 20px;
   }
-  
   .buttonContainer {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Better spacing */
     margin-bottom: 20px;
   }
   
-  .addButton {
+  .button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin: 20px;
   }
   
-  .addButton:hover {
-    background-color: #367C39;
+  .addButton {
+    background-color: #4CAF50;
+    color: white;
   }
   
+  .deleteButton {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .downloadButton {
+    background-color: #2196F3;
+    color: white;
+  }
+  
+  .button:hover {
+    opacity: 0.85;
+  }
+    
   .tableContainer {
     max-width: 100%;
     overflow-x: auto;
