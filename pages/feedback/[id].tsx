@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import styles from './feedback.module.css'; // Assuming your styles are defined here
+import styles from '../feedback.module.css'; // Assuming your styles are defined here
 
 interface WaybillData {
     srNo: string;
@@ -55,7 +55,10 @@ const FeedbackPage = () => {
   };
 
   if (error) return <div className={styles.container}>{error}</div>;
-  if (!waybill) return <div className={styles.container}>Loading...</div>;
+  if (!waybill) return <div>Loading...</div>;
+
+  if (!waybill.deliveryDate) return <div>Invalid waybill data</div>;
+
 
   const today = new Date();
   const deliveryDate = new Date(waybill.deliveryDate);
