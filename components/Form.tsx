@@ -35,11 +35,22 @@ export default function Form() {
     e.preventDefault();
     setLoading(true);
     setStatus('');
+
+    // Ensure phone number is prefixed with +91
+    const formattedPhoneNumber = formData.clientPhoneNumber.startsWith('+91')
+      ? formData.clientPhoneNumber
+      : `+91${formData.clientPhoneNumber}`;
+
+    const submissionData = {
+      ...formData,
+      clientPhoneNumber: formattedPhoneNumber,
+    };
+
     try {
       const response = await fetch('/api/submitForm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submissionData)
       });
 
       if (response.ok) {
@@ -110,10 +121,10 @@ export default function Form() {
           <input
             className={styles.formInput}
             type="tel"
-            value={formData.clientPhoneNumber}
+            value={formData.clientPhoneNumber.replace('+91', '')} // Display without +91
             onChange={handleChange}
             name="clientPhoneNumber"
-            pattern="^\+?[1-9]\d{1,14}$" // E.164 format
+            pattern="^[0-9]{10}$" // E.164 format without +91
             required
             title="Please enter a valid phone number"
           />
