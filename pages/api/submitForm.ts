@@ -1,6 +1,11 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
+import twilio from 'twilio';
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioClient = twilio(accountSid, authToken);
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +17,7 @@ export default async function handler(
 
   const {
     srNo, date, toName, branch, podNo, senderName, department, particular,
-    noOfEnvelopes, weight, rates, dpartner, deliveryDate, clientEmail
+    noOfEnvelopes, weight, rates, dpartner, deliveryDate, clientEmail, clientPhoneNumber // New field for client phone number
   } = req.body;
 
   // MongoDB Connection and Data Insertion
@@ -45,7 +50,7 @@ export default async function handler(
     const feedbackUrl = `https://waybills.vercel.app/feedback/${insertResult.insertedId}`;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: "ombhojane05@gmail.com",
       to: clientEmail,
       subject: 'New Waybill Submission Confirmation',
       html: `Dear ${toName},<br><br>A new waybill has been submitted with the following details:<br><br>` +
@@ -62,5 +67,21 @@ export default async function handler(
     return res.status(500).json({ message: 'Failed to send confirmation email', error: error.message });
   }
 
-  res.status(200).json({ message: 'Data sent and email notification sent successfully.' });
+  // SMS Sending Setup
+  try {
+    const feedbackUrl = `https://waybills.vercel.app/feedback/${insertResult.insertedId}`;
+
+    const smsMessage = `Dear ${toName}, a new waybill has been submitted with Waybill Number: ${srNo}. Expected Delivery Date: ${deliveryDate}. Review: ${feedbackUrl}`;
+    
+    await twilioClient.messages.create({
+      body: smsMessage,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: clientPhoneNumber // Make sure this number is in E.164 format (e.g., +1234567890)
+    });
+  } catch (error) {
+    console.error('SMS Sending Error:', error);
+    return res.status(500).json({ message: 'Failed to send SMS notification', error: error.message });
+  }
+
+  res.status(200).json({ message: 'Data sent and notifications sent successfully.' });
 }
