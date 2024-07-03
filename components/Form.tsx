@@ -28,29 +28,24 @@ export default function Form() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === 'clientPhoneNumber') {
+      // Prepend +91 if not already present
+      const formattedValue = value.startsWith('+91') ? value : `+91${value}`;
+      setFormData({ ...formData, [name]: formattedValue });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setStatus('');
-
-    // Ensure phone number is prefixed with +91
-    const formattedPhoneNumber = formData.clientPhoneNumber.startsWith('+91')
-      ? formData.clientPhoneNumber
-      : `+91${formData.clientPhoneNumber}`;
-
-    const submissionData = {
-      ...formData,
-      clientPhoneNumber: formattedPhoneNumber,
-    };
-
     try {
       const response = await fetch('/api/submitForm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submissionData)
+        body: JSON.stringify(formData)
       });
 
       if (response.ok) {
