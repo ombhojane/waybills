@@ -28,13 +28,7 @@ export default function Form() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === 'clientPhoneNumber') {
-      // Prepend +91 if not already present
-      const formattedValue = value.startsWith('+91') ? value : `+91${value}`;
-      setFormData({ ...formData, [name]: formattedValue });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -116,10 +110,10 @@ export default function Form() {
           <input
             className={styles.formInput}
             type="tel"
-            value={formData.clientPhoneNumber.replace('+91', '')} // Display without +91
+            value={formData.clientPhoneNumber}
             onChange={handleChange}
             name="clientPhoneNumber"
-            pattern="^[0-9]{10}$" // E.164 format without +91
+            pattern="^\+?[1-9]\d{1,14}$" // E.164 format
             required
             title="Please enter a valid phone number"
           />
