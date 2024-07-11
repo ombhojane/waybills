@@ -1,0 +1,95 @@
+.bgCustom {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 0, 0.1) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 0, 0.1) 50%,
+        rgba(255, 255, 0, 0.1) 75%,
+        transparent 75%,
+        transparent
+      ),
+      linear-gradient(
+        225deg,
+        rgba(255, 255, 0, 0.1) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 0, 0.1) 50%,
+        rgba(255, 255, 0, 0.1) 75%,
+        transparent 75%,
+        transparent
+      ),
+      #3f704d;
+    background-size: 50px 50px;
+  }
+  
+  .textCenter {
+    text-align: center;
+  }
+  
+  .mb8 {
+    margin-bottom: 2rem;
+  }
+  
+  .text3xl {
+    font-size: 1.875rem;
+  }
+  
+  .text4xl {
+    font-size: 2.25rem;
+  }
+  
+  .fontBold {
+    font-weight: 700;
+  }
+  
+  .textBlue600 {
+    color: #3182ce;
+  }
+  
+  .textGreen600 {
+    color: #38a169;
+  }
+  
+  .textGray700 {
+    color: #4a5568;
+  }
+  
+  .mt4 {
+    margin-top: 1rem;
+  }
+  
+  .bgBlue600 {
+    background-color: #3182ce;
+  }
+  
+  .hoverBgBlue700:hover {
+    background-color: #2b6cb0;
+  }
+  
+  .textWhite {
+    color: #ffffff;
+  }
+  
+  .py3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .px6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  
+  .roundedFull {
+    border-radius: 9999px;
+  }
+  
+  .transition {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .duration300 {
+    transition-duration: 300ms;
+  }
+  

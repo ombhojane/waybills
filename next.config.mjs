@@ -20,6 +20,19 @@ const nextConfig = {
             port: '',
             pathname: '/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'itat.mnclgroup.com',
+            port: '',
+            pathname: '/**',
+          },
+          {
+            protocol: 'https',
+            hostname: 'i.ibb.co',
+            port: '',
+            pathname: '/**',
+          },
+
         ],
         }
 };
