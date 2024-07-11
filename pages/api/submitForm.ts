@@ -76,8 +76,9 @@ export default async function handler(
     await twilioClient.messages.create({
       body: smsMessage,
       from: process.env.TWILIO_PHONE_NUMBER,
-      to: clientPhoneNumber // Make sure this number is in E.164 format (e.g., +1234567890)
+      to: clientPhoneNumber // its working for indian no. only, any format is suitable with ot without +91
     });
+    console.log('SMS sent successfully');
   } catch (error) {
     console.error('SMS Sending Error:', error);
     return res.status(500).json({ message: 'Failed to send SMS notification', error: error.message });
