@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './delivery-dashboard.module.css';
+import styles from '../delivery-dashboard.module.css';
 import { useRouter } from 'next/router';
 import * as XLSX from 'xlsx';
 
@@ -29,23 +29,34 @@ interface DataItem {
 }
 
 export default function DeliveryDashboard() {
-  const [data, setData] = useState<DataItem[]>([]);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [editFormData, setEditFormData] = useState<DataItem | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get<DataItem[]>('/api/data');
-      setData(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+    const [data, setData] = useState<DataItem[]>([]);
+    const [editId, setEditId] = useState<string | null>(null);
+    const [editFormData, setEditFormData] = useState<DataItem | null>(null);
+    const router = useRouter();
+  
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+      } else {
+        fetchData(token);
+      }
+    }, []);
+  
+    const fetchData = async (token: string) => {
+      try {
+        const response = await axios.get<DataItem[]>('/api/mumdata', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          localStorage.removeItem('token');
+          router.push('/login');
+        }
+      }
+    };
 
   const handleEditClick = (item: DataItem) => {
     setEditId(item._id);
@@ -71,7 +82,7 @@ export default function DeliveryDashboard() {
     const { _id, ...dataWithoutId } = editFormData;
   
     try {
-      const response = await axios.put('/api/updateData', {
+      const response = await axios.put('/api/mumupdateData', {
         id: editId,
         updatedData: dataWithoutId
       });
@@ -109,12 +120,12 @@ export default function DeliveryDashboard() {
     <div className={styles.container}>
       <h1 className={styles.title}>Delivery Dashboard</h1>
       <div className={styles.buttonContainer}>
-      <button className={`${styles.button} ${styles.addButton}`} onClick={() => router.push('/delivery-form')}>
+      <button className={`${styles.button} ${styles.addButton}`} onClick={() => router.push('/mumbai/delivery-form')}>
           Add New Waybill
         </button>
-        <button className={`${styles.button} ${styles.deleteButton}`} onClick={handleDeleteAll}>
+        {/* <button className={`${styles.button} ${styles.deleteButton}`} onClick={handleDeleteAll}>
           Delete All Data
-        </button>
+        </button> */}
         <button className={`${styles.button} ${styles.downloadButton}`} onClick={handleDownload}>
           Download Data as Excel
         </button>

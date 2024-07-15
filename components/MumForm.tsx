@@ -42,7 +42,7 @@ export default function Form() {
     setLoading(true);
     setStatus('');
     try {
-      const response = await fetch('/api/submitForm', {
+      const response = await fetch('/api/mumsubmitForm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

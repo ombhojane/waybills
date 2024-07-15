@@ -29,7 +29,7 @@ export default function HomePage() {
 
       {/* Call-to-Action Button */}
       <div>
-        <Link href="/proceed" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
+        <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300">
           Click Me to Proceed
         </Link>
       </div>

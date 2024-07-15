@@ -17,14 +17,14 @@ export default async function handler(
 
   const {
     srNo, date, toName, branch, podNo, senderName, department, particular,
-    noOfEnvelopes, weight, rates, dpartner, deliveryDate, clientEmail, clientPhoneNumber // New field for client phone number
+    noOfEnvelopes, weight, rates, dpartner, deliveryDate, clientEmail, clientPhoneNumber
   } = req.body;
 
   // MongoDB Connection and Data Insertion
   let insertResult;
   try {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
-    const db = client.db(process.env.DB_NAME);
+    const db = client.db("ahemdabad-bills");
 
     insertResult = await db.collection('waybills').insertOne({
       srNo, date, toName, branch, podNo, senderName, department, particular,

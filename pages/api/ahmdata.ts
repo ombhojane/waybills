@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
-    const db = client.db(process.env.DB_NAME);
+    const db = client.db("ahemdabad-bills");
 
     const data = await db.collection('waybills').find().toArray();
     client.close();
