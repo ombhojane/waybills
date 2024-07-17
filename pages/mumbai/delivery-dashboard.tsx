@@ -35,15 +35,15 @@ export default function DeliveryDashboard() {
     const router = useRouter();
   
     useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-      } else {
-        fetchData(token);
-      }
+      fetchData();
     }, []);
   
-    const fetchData = async (token: string) => {
+    const fetchData = async (providedToken?: string) => {
+      const token = providedToken || localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
       try {
         const response = await axios.get<DataItem[]>('/api/mumdata', {
           headers: { Authorization: `Bearer ${token}` }
@@ -101,7 +101,7 @@ export default function DeliveryDashboard() {
       try {
         const response = await axios.delete('/api/deleteAll');
         alert(response.data.message);
-        fetchData();
+        fetchData();  // This will now work without an argument
       } catch (error) {
         alert('Failed to delete data');
         console.error('Error while deleting data:', error);
