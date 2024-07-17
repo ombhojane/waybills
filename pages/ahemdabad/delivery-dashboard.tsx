@@ -35,17 +35,17 @@ export default function DeliveryDashboard() {
     const router = useRouter();
   
     useEffect(() => {
-      fetchData();
-    }, []);
-  
-    const fetchData = async (providedToken?: string) => {
-      const token = providedToken || localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (!token) {
         router.push('/login');
-        return;
+      } else {
+        fetchData(token);
       }
+    }, []);
+    
+    const fetchData = async (token: string) => {
       try {
-        const response = await axios.get<DataItem[]>('/api/ahmdata', {
+        const response = await axios.get<DataItem[]>('/api/mumdata', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setData(response.data);
@@ -97,18 +97,18 @@ export default function DeliveryDashboard() {
     }
   };
 
-  const handleDeleteAll = async () => {
-    if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
-      try {
-        const response = await axios.delete('/api/deleteAll');
-        alert(response.data.message);
-        fetchData();  // This will now work without an argument
-      } catch (error) {
-        alert('Failed to delete data');
-        console.error('Error while deleting data:', error);
-      }
-    }
-  };
+  // const handleDeleteAll = async () => {
+  //   if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
+  //     try {
+  //       const response = await axios.delete('/api/deleteAll');
+  //       alert(response.data.message);
+  //       fetchData();  // This will now work without an argument
+  //     } catch (error) {
+  //       alert('Failed to delete data');
+  //       console.error('Error while deleting data:', error);
+  //     }
+  //   }
+  // };
 
 
   const handleDownload = () => {

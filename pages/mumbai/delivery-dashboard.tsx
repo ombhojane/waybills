@@ -35,15 +35,15 @@ export default function DeliveryDashboard() {
     const router = useRouter();
   
     useEffect(() => {
-      fetchData();
-    }, []);
-  
-    const fetchData = async (providedToken?: string) => {
-      const token = providedToken || localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (!token) {
         router.push('/login');
-        return;
+      } else {
+        fetchData(token);
       }
+    }, []);
+    
+    const fetchData = async (token: string) => {
       try {
         const response = await axios.get<DataItem[]>('/api/mumdata', {
           headers: { Authorization: `Bearer ${token}` }
@@ -57,8 +57,8 @@ export default function DeliveryDashboard() {
         }
       }
     };
-
-  const handleEditClick = (item: DataItem) => {
+    
+    const handleEditClick = (item: DataItem) => {
     setEditId(item._id);
     setEditFormData(item);
   };
@@ -96,18 +96,18 @@ export default function DeliveryDashboard() {
     }
   };
 
-  const handleDeleteAll = async () => {
-    if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
-      try {
-        const response = await axios.delete('/api/deleteAll');
-        alert(response.data.message);
-        fetchData();  // This will now work without an argument
-      } catch (error) {
-        alert('Failed to delete data');
-        console.error('Error while deleting data:', error);
-      }
-    }
-  };
+  // const handleDeleteAll = async () => {
+  //   if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
+  //     try {
+  //       const response = await axios.delete('/api/deleteAll');
+  //       alert(response.data.message);
+  //       fetchData(token);  // Pass the token argument to fetchData
+  //     } catch (error) {
+  //       alert('Failed to delete data');
+  //       console.error('Error while deleting data:', error);
+  //     }
+  //   }
+  // };
 
   const handleDownload = () => {
     const ws = XLSX.utils.json_to_sheet(data.map(({ _id, feedback, ...item }) => item));
