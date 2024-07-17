@@ -47,7 +47,7 @@ export default async function handler(
       }
     });
 
-    const feedbackUrl = `https://waybills.vercel.app/feedback/${insertResult.insertedId}`;
+    const feedbackUrl = `https://waybills.vercel.app/feedback/mumbai/${insertResult.insertedId}`;
 
     const mailOptions = {
       from: "ombhojane05@gmail.com",
@@ -69,7 +69,7 @@ export default async function handler(
 
   // SMS Sending Setup
   try {
-    const feedbackUrl = `https://waybills.vercel.app/feedback/${insertResult.insertedId}`;
+    const feedbackUrl = `https://waybills.vercel.app/feedback/mumbai/${insertResult.insertedId}`;
 
     const smsMessage = `Dear ${toName}, a new waybill has been submitted with Waybill Number: ${srNo}. Expected Delivery Date: ${deliveryDate}. Review: ${feedbackUrl}`;
     

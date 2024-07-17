@@ -235,7 +235,7 @@ export default function Form() {
       <p className={styles.statusMessage}>{status}</p>
       {!loading && status === 'Success: Data submitted successfully.' && (
         <div className={styles.buttonGroup}>
-          <button onClick={() => router.push('/delivery-dashboard')} className={styles.dashboardButton}>
+          <button onClick={() => router.push('/mumbai/delivery-dashboard')} className={styles.dashboardButton}>
             Return to Dashboard
           </button>
           <button onClick={() => {

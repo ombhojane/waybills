@@ -22,7 +22,7 @@ export default function Login() {
       const response = await axios.post('/api/login', formData);
       setLoading(false);
       localStorage.setItem('token', response.data.token);
-      router.push(`/${response.data.branch.toLowerCase()}-dashboard`);
+      router.push(`/${response.data.branch.toLowerCase()}`);
     } catch (error) {
       setLoading(false);
       console.error(error);
