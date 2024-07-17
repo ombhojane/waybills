@@ -3,8 +3,13 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import styles from '../dashboard.module.css';
 
+interface User {
+  name: string;
+  role: 'admin' | 'delivery' | 'client';
+}
+
 export default function MumbaiDashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +21,7 @@ export default function MumbaiDashboard() {
     }
   }, []);
 
-  const fetchUserData = async (token) => {
+  const fetchUserData = async (token: string) => {
     try {
       const response = await axios.get('/api/user', {
         headers: { Authorization: `Bearer ${token}` }
