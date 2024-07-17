@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   }
 
   try {
-    verify(token, "d2ea46a961f8222c5f3c13fa6be8b547c3f6461ed6881d3076428579eb14a9f9"!);
+    verify(token.value, "d2ea46a961f8222c5f3c13fa6be8b547c3f6461ed6881d3076428579eb14a9f9");
     return NextResponse.next();
   } catch (error) {
     return NextResponse.redirect(new URL('/login', request.url));
