@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import styles from '../dashboard.module.css';
 
 interface User {
@@ -10,41 +9,16 @@ interface User {
 }
 
 export default function AhmedabadDashboard() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User>({ name: 'John Doe', role: 'admin' });
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-    } else {
-      fetchUserData(token);
-    }
-  }, []);
-
-  const fetchUserData = async (token: string) => {
-    try {
-      const response = await axios.get('/api/user', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setUser(response.data);
-    } catch (error) {
-      console.error(error);
-      localStorage.removeItem('token');
-      router.push('/login');
-    }
-  };
-
   const renderButtons = () => {
-    if (!user) return null;
     switch (user.role) {
       case 'admin':
         return (
           <>
             <button onClick={() => router.push('/ahmedabad/add')}>Manage Users</button>
-            <button onClick={() => router.push('/ahmedabad/delivery-dashboard')}>
-  View Orders
-</button>
+            <button onClick={() => router.push('/ahmedabad/delivery-dashboard')}>View Orders</button>
             <button>View Reports</button>
           </>
         );
