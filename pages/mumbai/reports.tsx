@@ -165,7 +165,7 @@ const Reports: React.FC = () => {
           />
         </div>
         <br></br>
-        <button className={styles.filterButton} onClick={() => document.getElementById('filterModal')?.showModal()}>
+        <button className={styles.filterButton} onClick={() => (document.getElementById('filterModal') as HTMLDialogElement)?.showModal()}>
           <FaFilter /> Filters
         </button>
       </div>
@@ -225,7 +225,7 @@ const Reports: React.FC = () => {
           />
         </div>
         <div className={styles.modalActions}>
-          <button onClick={() => document.getElementById('filterModal')?.close()} className={styles.closeButton}>
+          <button onClick={() => (document.getElementById('filterModal') as HTMLDialogElement)?.close()} className={styles.closeButton}>
             Close
           </button>
         </div>
