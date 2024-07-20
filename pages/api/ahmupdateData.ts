@@ -16,7 +16,7 @@ export default async function handler(
 
   try {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
-    const db = client.db("ahemdabad-bills");
+    const db = client.db("ahmedabad-bills");
     const result = await db.collection('waybills').updateOne(
       { _id: new ObjectId(id) },
       { $set: updatedData }

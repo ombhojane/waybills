@@ -9,7 +9,7 @@ export default function AddUser() {
     email: '',
     password: '',
     role: 'client',
-    branch: 'Ahemdabad', 
+    branch: 'Ahmedabad', 
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function AddUser() {
     try {
       const response = await axios.post('/api/register', formData);
       setLoading(false);
-      router.push('/ahemdabad');
+      router.push('/ahmedabad');
     } catch (error) {
       setLoading(false);
       console.error(error);

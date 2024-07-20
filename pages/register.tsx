@@ -48,7 +48,7 @@ export default function Register() {
           </select>
           <select name="branch" value={formData.branch} onChange={handleChange}>
             <option value="Mumbai">Mumbai</option>
-            <option value="Ahemdabad">Ahemdabad</option>
+            <option value="Ahmedabad">Ahmedabad</option>
           </select>
           <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
         </form>

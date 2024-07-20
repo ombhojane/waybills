@@ -4,7 +4,6 @@ import styles from '../delivery-dashboard.module.css';
 import { useRouter } from 'next/router';
 import * as XLSX from 'xlsx';
 
-
 interface DataItem {
   _id: string;
   srNo: string;
@@ -21,44 +20,45 @@ interface DataItem {
   dpartner: string;
   deliveryDate: string;
   deliveryStatus: string;
-  feedback?: {
-    rating: number;
-    message: string;
-  };
-  [key: string]: any;  // Adding an index signature
+  [key: string]: any;
 }
 
 export default function DeliveryDashboard() {
-    const [data, setData] = useState<DataItem[]>([]);
-    const [editId, setEditId] = useState<string | null>(null);
-    const [editFormData, setEditFormData] = useState<DataItem | null>(null);
-    const router = useRouter();
-  
-    useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-      } else {
-        fetchData(token);
-      }
-    }, []);
-    
-    const fetchData = async (token: string) => {
-      try {
-        const response = await axios.get<DataItem[]>('/api/mumdata', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          localStorage.removeItem('token');
-          router.push('/login');
-        }
-      }
-    };
-    
-    const handleEditClick = (item: DataItem) => {
+  const [data, setData] = useState<DataItem[]>([]);
+  const [filteredData, setFilteredData] = useState<DataItem[]>([]);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editFormData, setEditFormData] = useState<DataItem | null>(null);
+  const [filter, setFilter] = useState<'all' | 'intransit' | 'delivered'>('all');
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    filterData();
+  }, [data, filter]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get<DataItem[]>('/api/mumdata');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const filterData = () => {
+    if (filter === 'all') {
+      setFilteredData(data);
+    } else if (filter === 'intransit') {
+      setFilteredData(data.filter(item => item.deliveryStatus === 'In Transit'));
+    } else {
+      setFilteredData(data.filter(item => item.deliveryStatus === 'Delivered'));
+    }
+  };
+
+  const handleEditClick = (item: DataItem) => {
     setEditId(item._id);
     setEditFormData(item);
   };
@@ -68,8 +68,8 @@ export default function DeliveryDashboard() {
     setEditFormData(null);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as keyof DataItem; // Correct typing for the name
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const name = e.target.name as keyof DataItem;
     const value = e.target.value;
     if (editFormData) {
       setEditFormData({ ...editFormData, [name]: value });
@@ -96,21 +96,8 @@ export default function DeliveryDashboard() {
     }
   };
 
-  // const handleDeleteAll = async () => {
-  //   if (confirm('Are you sure you want to delete all data? This action cannot be undone.')) {
-  //     try {
-  //       const response = await axios.delete('/api/deleteAll');
-  //       alert(response.data.message);
-  //       fetchData(token);  // Pass the token argument to fetchData
-  //     } catch (error) {
-  //       alert('Failed to delete data');
-  //       console.error('Error while deleting data:', error);
-  //     }
-  //   }
-  // };
-
   const handleDownload = () => {
-    const ws = XLSX.utils.json_to_sheet(data.map(({ _id, feedback, ...item }) => item));
+    const ws = XLSX.utils.json_to_sheet(data.map(({ _id, ...item }) => item));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Data");
     XLSX.writeFile(wb, "DeliveryData.xlsx");
@@ -119,86 +106,112 @@ export default function DeliveryDashboard() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Delivery Dashboard</h1>
-      <div className={styles.buttonContainer}>
-      <button className={`${styles.button} ${styles.addButton}`} onClick={() => router.push('/mumbai/delivery-form')}>
+      <div className={styles.actions}>
+        <div className={styles.filters}>
+          <button 
+            className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All
+          </button>
+          <button 
+            className={`${styles.filterButton} ${filter === 'intransit' ? styles.active : ''}`}
+            onClick={() => setFilter('intransit')}
+          >
+            In Transit
+          </button>
+          <button 
+            className={`${styles.filterButton} ${filter === 'delivered' ? styles.active : ''}`}
+            onClick={() => setFilter('delivered')}
+          >
+            Delivered
+          </button>
+        </div>
+        <button className={styles.addButton} onClick={() => router.push('/mumbai/delivery-form')}>
           Add New Waybill
         </button>
-        {/* <button className={`${styles.button} ${styles.deleteButton}`} onClick={handleDeleteAll}>
-          Delete All Data
-        </button> */}
-        <button className={`${styles.button} ${styles.downloadButton}`} onClick={handleDownload}>
-          Download Data as Excel
+        <button className={styles.downloadButton} onClick={handleDownload}>
+          Download Data
         </button>
       </div>
 
       <div className={styles.tableContainer}>
-        <h2 className={styles.tableTitle}>Insights</h2>
         <table className={styles.table}>
           <thead>
-          <tr>
-            <th>Sr No</th>
-            <th>Date</th>
-            <th>To Name</th>
-            <th>Branch</th>
-            <th>POD No</th>
-            <th>Sender Name</th>
-            <th>Department</th>
-            <th>Particular</th>
-            <th>No of Envelopes</th>
-            <th>Weight</th>
-            <th>Rates</th>
-            <th>Bluedart</th>
-            <th>Delivery Date</th>
-            <th>Delivery Status</th>
-            <th>Actions</th>
-            <th>Feedback Rating</th>
-            <th>Feedback Message</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              {editId === item._id ? (
-                <>
-                  {Object.keys(editFormData || {}).map(key => (
-                    key !== '_id' && key !== 'feedback' && <td key={key}>
-                      <input
-                        type="text"
-                        name={key}
-                        value={(editFormData as DataItem)[key]}
-                        onChange={handleChange}
-                      />
-                    </td>
-                  ))}
-                  <td>
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={handleCancel}>Cancel</button>
-                  </td>
-                  <td>N/A</td> 
-                  <td>N/A</td>
-                </>     
-              ) : (
-                <>
-                  {Object.entries(item).map(([key, value], idx) => (
-                    key !== '_id' && key !== 'feedback' && <td key={idx}>{value}</td>
-                  ))}
-                  <td>
-                    <button onClick={() => handleEditClick(item)}>Edit</button>
-                  </td>
-                  <td>
-                    {item.feedback ? item.feedback.rating + '/5' : 'N/A'}
-                  </td>
-                  <td>
-                    {item.feedback ? item.feedback.message : 'N/A'}
-                  </td>
-                </>
-              )}
+            <tr>
+              <th>Sr No</th>
+              <th>Date</th>
+              <th>To Name</th>
+              <th>Branch</th>
+              <th>POD No</th>
+              <th>Sender Name</th>
+              <th>Department</th>
+              <th>Particular</th>
+              <th>No of Envelopes</th>
+              <th>Weight</th>
+              <th>Rates</th>
+              <th>Delivery Partner</th>
+              <th>Delivery Date</th>
+              <th>Delivery Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-
-
+          </thead>
+          <tbody>
+            {filteredData.map((item, index) => (
+              <tr key={index}>
+                {editId === item._id ? (
+                  <>
+                    {Object.keys(editFormData || {}).map(key => (
+                      key !== '_id' && (
+                        <td key={key}>
+                          {key === 'deliveryStatus' ? (
+                            <select
+                              name={key}
+                              value={(editFormData as DataItem)[key]}
+                              onChange={handleChange}
+                              className={styles.editInput}
+                            >
+                              <option value="In Transit">In Transit</option>
+                              <option value="Delivered">Delivered</option>
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              name={key}
+                              value={(editFormData as DataItem)[key]}
+                              onChange={handleChange}
+                              className={styles.editInput}
+                            />
+                          )}
+                        </td>
+                      )
+                    ))}
+                    <td>
+                      <button className={styles.saveButton} onClick={handleSave}>Save</button>
+                      <button className={styles.cancelButton} onClick={handleCancel}>Cancel</button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    {Object.entries(item).map(([key, value], idx) => (
+                      key !== '_id' && (
+                        <td key={idx}>
+                          {key === 'deliveryStatus' ? (
+                            <span className={`${styles.status} ${styles[value.toLowerCase().replace(' ', '')]}`}>
+                              {value}
+                            </span>
+                          ) : value}
+                        </td>
+                      )
+                    ))}
+                    <td>
+                      <button className={styles.editButton} onClick={() => handleEditClick(item)}>Edit</button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>

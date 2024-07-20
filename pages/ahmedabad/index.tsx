@@ -9,7 +9,7 @@ interface User {
   // add other properties as needed
 }
 
-export default function AhemdabadDashboard() {
+export default function AhmedabadDashboard() {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
@@ -41,8 +41,8 @@ export default function AhemdabadDashboard() {
       case 'admin':
         return (
           <>
-            <button onClick={() => router.push('/ahemdabad/add')}>Manage Users</button>
-            <button onClick={() => router.push('/ahemdabad/delivery-dashboard')}>
+            <button onClick={() => router.push('/ahmedabad/add')}>Manage Users</button>
+            <button onClick={() => router.push('/ahmedabad/delivery-dashboard')}>
   View Orders
 </button>
             <button>View Reports</button>
@@ -69,7 +69,7 @@ export default function AhemdabadDashboard() {
 
   return (
     <div className={styles.dashboard}>
-      <h1>Ahemdabad Dashboard</h1>
+      <h1>Ahmedabad Dashboard</h1>
       {user && <p>Welcome, {user.name}</p>}
       <div className={styles.buttonContainer}>
         {renderButtons()}

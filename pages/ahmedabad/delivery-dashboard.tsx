@@ -45,7 +45,7 @@ export default function DeliveryDashboard() {
     
     const fetchData = async (token: string) => {
       try {
-        const response = await axios.get<DataItem[]>('/api/mumdata', {
+        const response = await axios.get<DataItem[]>('/api/ahmdata', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setData(response.data);
@@ -122,7 +122,7 @@ export default function DeliveryDashboard() {
     <div className={styles.container}>
       <h1 className={styles.title}>Delivery Dashboard</h1>
       <div className={styles.buttonContainer}>
-      <button className={`${styles.button} ${styles.addButton}`} onClick={() => router.push('/ahemdabad/delivery-form')}>
+      <button className={`${styles.button} ${styles.addButton}`} onClick={() => router.push('/ahmedabad/delivery-form')}>
           Add New Waybill
         </button>
         {/* <button className={`${styles.button} ${styles.deleteButton}`} onClick={handleDeleteAll}>

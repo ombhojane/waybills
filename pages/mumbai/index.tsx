@@ -44,7 +44,7 @@ export default function MumbaiDashboard() {
             <button onClick={() => router.push('/mumbai/delivery-dashboard')}>
   View Orders
 </button>
-            <button>View Reports</button>
+            <button onClick={() => router.push('/mumbai/reports')}>View Reports</button>
           </>
         );
       case 'delivery':

@@ -1,72 +1,161 @@
 .container {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .title {
-    margin-bottom: 20px;
-  }
-  .buttonContainer {
-    display: flex;
-    justify-content: center; /* Better spacing */
-    margin-bottom: 20px;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 20px;
-  }
-  
-  .addButton {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .deleteButton {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .downloadButton {
-    background-color: #2196F3;
-    color: white;
-  }
-  
-  .button:hover {
-    opacity: 0.85;
-  }
-    
-  .tableContainer {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f8f0;
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.filterButton {
+  background-color: white;
+  border: 1px solid #90ee90;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #2c3e50;
+}
+
+.filterButton.active {
+  background-color: #90ee90;
+  color: white;
+}
+
+.addButton, .downloadButton {
+  background-color: #90ee90;
+  color: #2c3e50;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.addButton:hover, .downloadButton:hover {
+  background-color: #7ed17e;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.table th, .table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table th {
+  background-color: #90ee90;
+  font-weight: bold;
+  color: #2c3e50;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background-color: #f0f8f0;
+}
+
+.editInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #90ee90;
+  border-radius: 4px;
+}
+
+.saveButton, .cancelButton, .editButton {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.saveButton {
+  background-color: #90ee90;
+  color: #2c3e50;
+}
+
+.cancelButton {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.editButton {
+  background-color: #ffeaa7;
+  color: #2c3e50;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.intransit {
+  background-color: #ffeaa7;
+  color: #2c3e50;
+}
+
+.delivered {
+  background-color: #90ee90;
+  color: #2c3e50;
+}
+
+@media (max-width: 1200px) {
   .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: auto;
+    font-size: 0.9rem;
   }
-  
-  .table th, .table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
+}
+
+@media (max-width: 992px) {
+  .table {
+    font-size: 0.8rem;
   }
-  
-  .table th {
-    background-color: #f2f2f2;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
-  
-  .table tr:nth-child(odd) {
-    background-color: #f9f9f9;
+
+  .filters {
+    justify-content: center;
   }
-  
-  .table tr:hover {
-    background-color: #e0e0e0;
-  }
-  
+}
