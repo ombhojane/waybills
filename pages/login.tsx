@@ -31,14 +31,17 @@ export default function Login() {
         const branch = response.data.branch.toLowerCase();
         const redirectPath = `/${branch}`;
         console.log('Attempting to redirect to:', redirectPath);
-        
+
         try {
-          await router.push(redirectPath);
+          await router.push({
+            pathname: redirectPath,
+            query: { name: response.data.name },
+          });
           console.log('Redirection successful');
         } catch (routerError) {
           console.error('Router push failed:', routerError);
           console.log('Falling back to window.location.href');
-          window.location.href = redirectPath;
+          window.location.href = `${redirectPath}?name=${response.data.name}`;
         }
       } else {
         console.error('Login failed:', response.data.message);

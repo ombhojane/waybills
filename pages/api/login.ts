@@ -33,7 +33,7 @@ export default async function handler(
       }
 
       console.log('Login successful for user:', email, 'Branch:', user.branch);
-      res.status(200).json({ success: true, branch: user.branch });
+      res.status(200).json({ success: true, branch: user.branch, name: user.name });
     } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ success: false, message: 'An error occurred during login' });

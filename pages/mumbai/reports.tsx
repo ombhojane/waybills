@@ -37,6 +37,8 @@ const Reports: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -109,6 +111,14 @@ const Reports: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMonth(e.target.value);
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedYear(e.target.value);
+  };
+
   const calculateSummary = () => {
     const summary = {
       totalShipments: filteredData.length,
@@ -126,6 +136,11 @@ const Reports: React.FC = () => {
       const month = format(new Date(item.date), 'MMMM yyyy');
       monthlyBilling[month] = (monthlyBilling[month] || 0) + parseFloat(item.rates);
     });
+
+    if (selectedMonth && selectedYear) {
+      const selectedDate = format(new Date(`${selectedYear}-${selectedMonth}-01`), 'MMMM yyyy');
+      return { [selectedDate]: monthlyBilling[selectedDate] || 0 };
+    }
 
     return monthlyBilling;
   };
@@ -164,7 +179,6 @@ const Reports: React.FC = () => {
             className={styles.searchInput}
           />
         </div>
-        <br></br>
         <button className={styles.filterButton} onClick={() => (document.getElementById('filterModal') as HTMLDialogElement)?.showModal()}>
           <FaFilter /> Filters
         </button>
@@ -246,6 +260,37 @@ const Reports: React.FC = () => {
 
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>Monthly Billing</h2>
+          <div className={styles.monthYearSelectors}>
+            <select
+              name="selectedMonth"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              className={styles.input}
+            >
+              <option value="">Select Month</option>
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
+                  {format(new Date(2000, i, 1), 'MMMM')}
+                </option>
+              ))}
+            </select>
+            <select
+              name="selectedYear"
+              value={selectedYear}
+              onChange={handleYearChange}
+              className={styles.input}
+            >
+              <option value="">Select Year</option>
+              {Array.from({ length: 10 }, (_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year.toString()}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
           <ul className={styles.billingList}>
             {Object.entries(calculateMonthlyBilling()).map(([month, total]) => (
               <li key={month} className={styles.billingItem}>
@@ -256,7 +301,6 @@ const Reports: React.FC = () => {
           </ul>
         </div>
       </div>
-
 
       <div className={styles.tableContainer}>
         <h2 className={styles.tableTitle}>Delivery List</h2>
