@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from './auth.module.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
+import Cookies from 'js-cookie';
 
 export default function Login() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (token) {
+      router.push('/mumbai');
+    }
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,33 +28,18 @@ export default function Login() {
     setError('');
 
     try {
-      console.log('Submitting form data:', formData);
       const response = await axios.post('/api/login', formData);
-      console.log('Login response:', response.data);
       setLoading(false);
 
-      // In login.tsx, update the handleSubmit function
-if (response.data.success && response.data.branch) {
-  const branch = response.data.branch.toLowerCase();
-  const redirectPath = `/${branch}`;
-  try {
-    await router.push({
-      pathname: redirectPath,
-      query: { name: response.data.name, role: response.data.role },
-    });
-    console.log('Redirection successful');
-  } catch (routerError) {
-    console.error('Router push failed:', routerError);
-    console.log('Falling back to window.location.href');
-    window.location.href = `${redirectPath}?name=${response.data.name}&role=${response.data.role}`;
-  }
-} else {
-        console.error('Login failed:', response.data.message);
+      if (response.data.success) {
+        Cookies.set('token', response.data.token, { expires: 7 });
+
+        router.push('/mumbai');
+      } else {
         setError(response.data.message || 'Login failed. Please try again.');
       }
     } catch (error) {
       setLoading(false);
-      console.error('Login error:', error);
       setError('An error occurred. Please try again.');
     }
   };

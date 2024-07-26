@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from '../dashboard.module.css';
 import { FaUserCog, FaClipboardList, FaChartBar, FaTasks, FaTruck, FaShoppingCart, FaSearchLocation } from 'react-icons/fa';
+import { requireAuth } from '../.././lib/authMiddleware';
 
 interface User {
   name: string;
@@ -16,16 +17,8 @@ interface DashboardButton {
   icon: React.ReactElement;
 }
 
-const MumbaiDashboard: React.FC = () => {
+const MumbaiDashboard: React.FC<{ user: User }> = ({ user }) => {
   const router = useRouter();
-  const { name, role } = router.query;
-  const [user, setUser] = React.useState<User>({ name: 'User', role: 'client' });
-
-  React.useEffect(() => {
-    if (name && role) {
-      setUser({ name: name as string, role: role as 'admin' | 'delivery' | 'client' });
-    }
-  }, [name, role]);
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
@@ -61,5 +54,13 @@ const MumbaiDashboard: React.FC = () => {
     </div>
   );
 };
+
+export async function getServerSideProps(context: any) {
+  const user = requireAuth(context);
+
+  return {
+    props: { user },
+  };
+}
 
 export default MumbaiDashboard;
