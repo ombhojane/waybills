@@ -2,6 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from '../dashboard.module.css';
+import { FaUserCog, FaClipboardList, FaChartBar, FaTasks, FaTruck, FaShoppingCart, FaSearchLocation } from 'react-icons/fa';
 
 interface User {
   name: string;
@@ -11,26 +12,33 @@ interface User {
 interface DashboardButton {
   label: string;
   onClick: () => void;
+  icon: React.ReactElement;
 }
 
-const BkcDashboard: React.FC = () => {
+const BKCDashboard: React.FC = () => {
   const router = useRouter();
-  const { name } = router.query;
-  const [user] = React.useState<User>({ name: name as string || 'User', role: 'admin' });
+  const { name, role } = router.query;
+  const [user, setUser] = React.useState<User>({ name: 'User', role: 'client' });
+
+  React.useEffect(() => {
+    if (name && role) {
+      setUser({ name: name as string, role: role as 'admin' | 'delivery' | 'client' });
+    }
+  }, [name, role]);
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
-      { label: 'Manage Users', onClick: () => router.push('/bkc/add') },
-      { label: 'View Orders', onClick: () => router.push('/bkc/delivery-dashboard') },
-      { label: 'View Reports', onClick: () => router.push('/bkc/reports') },
+      { label: 'Manage Users', onClick: () => router.push('/bkc/add'), icon: <FaUserCog /> },
+      { label: 'View Orders', onClick: () => router.push('/bkc/delivery-dashboard'), icon: <FaClipboardList /> },
+      { label: 'View Reports', onClick: () => router.push('/bkc/reports'), icon: <FaChartBar /> },
     ],
     delivery: [
-      { label: 'View Assignments', onClick: () => console.log('View Assignments') },
-      { label: 'Update Delivery Status', onClick: () => console.log('Update Delivery Status') },
+      { label: 'View Assignments', onClick: () => console.log('View Assignments'), icon: <FaTasks /> },
+      { label: 'Update Delivery Status', onClick: () => router.push('/bkc/del-update'), icon: <FaTruck /> },
     ],
     client: [
-      { label: 'Place Order', onClick: () => console.log('Place Order') },
-      { label: 'Track Order', onClick: () => console.log('Track Order') },
+      { label: 'Place Order', onClick: () => console.log('Place Order'), icon: <FaShoppingCart /> },
+      { label: 'Track Order', onClick: () => console.log('Track Order'), icon: <FaSearchLocation /> },
     ],
   };
 
@@ -44,6 +52,7 @@ const BkcDashboard: React.FC = () => {
       <div className={styles.buttonContainer}>
         {dashboardButtons[user.role].map((button, index) => (
           <button key={index} className={styles.actionButton} onClick={button.onClick}>
+            <span className={styles.buttonIcon}>{button.icon}</span>
             {button.label}
           </button>
         ))}
@@ -52,4 +61,4 @@ const BkcDashboard: React.FC = () => {
   );
 };
 
-export default BkcDashboard;
+export default BKCDashboard;
