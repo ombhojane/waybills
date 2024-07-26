@@ -13,27 +13,20 @@ interface DashboardButton {
   onClick: () => void;
 }
 
-const MumbaiDashboard: React.FC = () => {
+const BkcDashboard: React.FC = () => {
   const router = useRouter();
-  const { name, role } = router.query;
-  const [user, setUser] = React.useState<User>({ name: 'User', role: 'client' });
-
-  React.useEffect(() => {
-    if (name && role) {
-      setUser({ name: name as string, role: role as 'admin' | 'delivery' | 'client' });
-    }
-  }, [name, role]);
-
+  const { name } = router.query;
+  const [user] = React.useState<User>({ name: name as string || 'User', role: 'admin' });
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
-      { label: 'Manage Users', onClick: () => router.push('/mumbai/add') },
-      { label: 'View Orders', onClick: () => router.push('/mumbai/delivery-dashboard') },
-      { label: 'View Reports', onClick: () => router.push('/mumbai/reports') },
+      { label: 'Manage Users', onClick: () => router.push('/bkc/add') },
+      { label: 'View Orders', onClick: () => router.push('/bkc/delivery-dashboard') },
+      { label: 'View Reports', onClick: () => router.push('/bkc/reports') },
     ],
     delivery: [
       { label: 'View Assignments', onClick: () => console.log('View Assignments') },
-      { label: 'Update Delivery Status', onClick: () => router.push('/mumbai/del-update')  },
+      { label: 'Update Delivery Status', onClick: () => console.log('Update Delivery Status') },
     ],
     client: [
       { label: 'Place Order', onClick: () => console.log('Place Order') },
@@ -44,8 +37,8 @@ const MumbaiDashboard: React.FC = () => {
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
-        <Image src="https://i.ibb.co/2cck053/gate-of-india.png" alt="Mumbai Icon" width={50} height={50} />
-        <h1 className={styles.title}>Mumbai Dashboard</h1>
+        <Image src="https://i.ibb.co/2cck053/gate-of-india.png" alt="BKC Icon" width={50} height={50} />
+        <h1 className={styles.title}>BKC Dashboard</h1>
       </div>
       {user && <p className={styles.welcome}>Welcome, {user.name}</p>}
       <div className={styles.buttonContainer}>
@@ -59,4 +52,4 @@ const MumbaiDashboard: React.FC = () => {
   );
 };
 
-export default MumbaiDashboard;
+export default BkcDashboard;

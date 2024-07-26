@@ -23,7 +23,7 @@ interface DataItem {
   [key: string]: any;
 }
 
-export default function DeliveryDashboard() {
+export default function DeliveryUpdate() {
   const [data, setData] = useState<DataItem[]>([]);
   const [filteredData, setFilteredData] = useState<DataItem[]>([]);
   const [editId, setEditId] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export default function DeliveryDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get<DataItem[]>('/api/ahmdata');
+      const response = await axios.get<DataItem[]>('/api/mumdata');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -82,7 +82,7 @@ export default function DeliveryDashboard() {
     const { _id, ...dataWithoutId } = editFormData;
   
     try {
-      const response = await axios.put('/api/ahmupdateData', {
+      const response = await axios.put('/api/mumupdateData', {
         id: editId,
         updatedData: dataWithoutId
       });
@@ -127,9 +127,7 @@ export default function DeliveryDashboard() {
             Delivered
           </button>
         </div>
-        <button className={styles.addButton} onClick={() => router.push('/ahmedabad/delivery-form')}>
-          Add New Waybill
-        </button>
+      
         <button className={styles.downloadButton} onClick={handleDownload}>
           Download Data
         </button>

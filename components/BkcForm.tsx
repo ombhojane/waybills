@@ -41,7 +41,7 @@ export default function Form() {
     setLoading(true);
     setStatus("");
     try {
-      const response = await fetch("/api/ahmsubmitForm", {
+      const response = await fetch("/api/bkcsubmitForm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -288,7 +288,7 @@ export default function Form() {
       {!loading && status === "Success: Data submitted successfully." && (
         <div className={styles.buttonGroup}>
           <button
-            onClick={() => router.push("/ahmedabad/delivery-dashboard")}
+            onClick={() => router.push("/bkc/delivery-dashboard")}
             className={styles.dashboardButton}
           >
             Return to Dashboard

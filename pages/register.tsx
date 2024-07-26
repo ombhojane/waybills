@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from './auth.module.css';
+import { FaUser, FaEnvelope, FaLock, FaBuilding } from 'react-icons/fa';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ export default function Register() {
       const response = await axios.post('/api/register', formData);
       setLoading(false);
       localStorage.setItem('token', response.data.token);
-      router.push(`/${formData.branch.toLowerCase()}-dashboard`);
+      router.push(`/${formData.branch.toLowerCase()}`);
     } catch (error) {
       setLoading(false);
       console.error(error);
@@ -35,23 +36,50 @@ export default function Register() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.formContainer}>
-        <h1 className={styles.title}>Register</h1>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
-          <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
-          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" required />
-          <select name="role" value={formData.role} onChange={handleChange}>
-            <option value="client">Client</option>
-            <option value="delivery">Delivery Partner</option>
-            <option value="admin">Admin</option>
-          </select>
-          <select name="branch" value={formData.branch} onChange={handleChange}>
-            <option value="Mumbai">Mumbai</option>
-            <option value="Ahmedabad">Ahmedabad</option>
-          </select>
-          <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
-        </form>
+      <div className={styles.card}>
+        <div className={styles.imageContainer}>
+          <div className={styles.gradientBackground}>
+            <img
+              src="https://i.ibb.co/1MtD2ZG/download.png"
+              alt="Register Illustration"
+              className={styles.illustration}
+            />
+          </div>
+        </div>
+        <div className={styles.formContainer}>
+          <h1 className={styles.title}>Register</h1>
+          <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.inputGroup}>
+              <FaUser className={styles.icon} />
+              <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+            </div>
+            <div className={styles.inputGroup}>
+              <FaEnvelope className={styles.icon} />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
+            </div>
+            <div className={styles.inputGroup}>
+              <FaLock className={styles.icon} />
+              <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" required />
+            </div>
+            <div className={styles.inputGroup}>
+              <FaBuilding className={styles.icon} />
+              <select name="role" value={formData.role} onChange={handleChange}>
+                <option value="client">Client</option>
+                <option value="delivery">Delivery Partner</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div className={styles.inputGroup}>
+              <FaBuilding className={styles.icon} />
+              <select name="branch" value={formData.branch} onChange={handleChange}>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="BKC">BKC</option>
+              </select>
+            </div>
+            <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function DeliveryDashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get<DataItem[]>('/api/ahmdata');
+      const response = await axios.get<DataItem[]>('/api/bkcdata');
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -82,7 +82,7 @@ export default function DeliveryDashboard() {
     const { _id, ...dataWithoutId } = editFormData;
   
     try {
-      const response = await axios.put('/api/ahmupdateData', {
+      const response = await axios.put('/api/bkcupdateData', {
         id: editId,
         updatedData: dataWithoutId
       });
@@ -127,7 +127,7 @@ export default function DeliveryDashboard() {
             Delivered
           </button>
         </div>
-        <button className={styles.addButton} onClick={() => router.push('/ahmedabad/delivery-form')}>
+        <button className={styles.addButton} onClick={() => router.push('/bkc/delivery-form')}>
           Add New Waybill
         </button>
         <button className={styles.downloadButton} onClick={handleDownload}>

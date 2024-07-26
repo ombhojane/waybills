@@ -23,7 +23,7 @@ export default function HomePage() {
       {/* Welcome Message */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-blue-600">Welcome To</h1>
-        <h2 className="text-4xl font-bold text-green-600">MNCL Waybill Portal</h2>
+        <h2 className="text-4xl font-bold text-green-600">Monarch Networth Dispatch Portal</h2>
         <p className="text-lg text-gray-700 mt-4">Designed & Developed by MNCL IT | All Rights Reserved. MNCL © 2024</p>
       </div>
 

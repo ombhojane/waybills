@@ -24,7 +24,7 @@ export default async function handler(
   let insertResult;
   try {
     const client = await MongoClient.connect("mongodb+srv://aminvasudev6:wcw9QsKgW3rUeGA4@waybillcluster.88jnvsg.mongodb.net/?retryWrites=true&w=majority&appName=waybillCluster");
-    const db = client.db("ahmedabad-bills");
+    const db = client.db("bkc-bills");
 
     insertResult = await db.collection('waybills').insertOne({
       srNo, date, toName, branch, podNo, senderName, department, particular,
@@ -47,7 +47,7 @@ export default async function handler(
       }
     });
 
-    const feedbackUrl = `https://waybills.vercel.app/feedback/ahmedabad/${insertResult.insertedId}`;
+    const feedbackUrl = `https://waybills.vercel.app/feedback/bkc/${insertResult.insertedId}`;
 
     const mailOptions = {
       from: "ombhojane05@gmail.com",
@@ -69,7 +69,7 @@ export default async function handler(
 
   // SMS Sending Setup
   try {
-    const feedbackUrl = `https://waybills.vercel.app/feedback/ahmedabad/${insertResult.insertedId}`;
+    const feedbackUrl = `https://waybills.vercel.app/feedback/bkc/${insertResult.insertedId}`;
 
     const smsMessage = `Dear ${toName}, a new waybill has been submitted with Waybill Number: ${srNo}. Expected Delivery Date: ${deliveryDate}. Review: ${feedbackUrl}`;
     
