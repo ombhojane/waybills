@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import styles from '../../FeedbackPages.module.css';
+
 
 interface WaybillData {
   srNo: string;
@@ -53,17 +55,18 @@ const FeedbackPage = () => {
     }
   };
 
-  if (error) return <div className="text-red-500 text-center">{error}</div>;
-  if (!waybill) return <div className="text-center">Loading...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
+  if (!waybill) return <div className={styles.loading}>Loading...</div>;
 
   const today = new Date();
   const deliveryDate = new Date(waybill.deliveryDate);
 
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 bg-gray-50">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Waybill Details</h1>
-      <div className="bg-white shadow-lg rounded-lg p-8">
-        <div className="grid grid-cols-2 gap-6">
+    <div className={styles.container}>
+      <h1 className={styles.title}>Waybill Details</h1>
+      <div className={styles.card}>
+        <div className={styles.grid}>
           <DetailItem icon={<PackageIcon />} label="Waybill Number" value={waybill.srNo} />
           <DetailItem icon={<CalendarIcon />} label="Date" value={waybill.date} />
           <DetailItem icon={<UserIcon />} label="To Name" value={waybill.toName} />
@@ -79,15 +82,13 @@ const FeedbackPage = () => {
         </div>
 
         {deliveryDate <= today && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Feedback</h2>
-            <div className="flex items-center space-x-2 my-4">
+          <div className={styles.feedbackSection}>
+            <h2 className={styles.feedbackTitle}>Feedback</h2>
+            <div className={styles.starRating}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
-                  className={`text-3xl focus:outline-none transition-colors duration-200 ${
-                    star <= rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-200'
-                  }`}
+                  className={`${styles.star} ${star <= rating ? styles.starActive : styles.starInactive}`}
                   onClick={() => setRating(star)}
                 >
                   ★
@@ -95,14 +96,14 @@ const FeedbackPage = () => {
               ))}
             </div>
             <textarea
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={styles.textarea}
               placeholder="Leave a feedback message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
             ></textarea>
             <button 
-              className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+              className={styles.button}
               onClick={submitFeedback}
             >
               Submit Feedback
@@ -115,11 +116,11 @@ const FeedbackPage = () => {
 };
 
 const DetailItem = ({ icon, label, value }: { icon: JSX.Element, label: string, value: string }) => (
-  <div className="flex items-center space-x-3">
-    <div className="text-gray-500">{icon}</div>
+  <div className={styles.detailItem}>
+    <div className={styles.icon}>{icon}</div>
     <div>
-      <p className="text-sm font-medium text-gray-500">{label}</p>
-      <p className="text-gray-800">{value}</p>
+      <p className={styles.label}>{label}</p>
+      <p className={styles.value}>{value}</p>
     </div>
   </div>
 );
