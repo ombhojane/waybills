@@ -3,6 +3,8 @@ import axios from 'axios';
 import styles from '../delivery-dashboard.module.css';
 import { useRouter } from 'next/router';
 import * as XLSX from 'xlsx';
+import { FaFilter, FaPlus, FaDownload, FaEdit, FaSave, FaTimes, FaTruck, FaCheckCircle } from 'react-icons/fa';
+
 
 interface DataItem {
   _id: string;
@@ -104,34 +106,36 @@ export default function DeliveryDashboard() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Delivery Dashboard</h1>
+<div className={styles.container}>
+      <h1 className={styles.title}>
+        <FaTruck className={styles.titleIcon} /> Delivery Dashboard
+      </h1>
       <div className={styles.actions}>
         <div className={styles.filters}>
           <button 
             className={`${styles.filterButton} ${filter === 'all' ? styles.active : ''}`}
             onClick={() => setFilter('all')}
           >
-            All
+            <FaFilter /> All
           </button>
           <button 
             className={`${styles.filterButton} ${filter === 'intransit' ? styles.active : ''}`}
             onClick={() => setFilter('intransit')}
           >
-            In Transit
+            <FaTruck /> In Transit
           </button>
           <button 
             className={`${styles.filterButton} ${filter === 'delivered' ? styles.active : ''}`}
             onClick={() => setFilter('delivered')}
           >
-            Delivered
+            <FaCheckCircle /> Delivered
           </button>
         </div>
         <button className={styles.addButton} onClick={() => router.push('/mumbai/delivery-form')}>
-          Add New Waybill
+          <FaPlus /> Add New Waybill
         </button>
         <button className={styles.downloadButton} onClick={handleDownload}>
-          Download Data
+          <FaDownload /> Download Data
         </button>
       </div>
 
@@ -187,8 +191,12 @@ export default function DeliveryDashboard() {
                       )
                     ))}
                     <td>
-                      <button className={styles.saveButton} onClick={handleSave}>Save</button>
-                      <button className={styles.cancelButton} onClick={handleCancel}>Cancel</button>
+                      <button className={styles.saveButton} onClick={handleSave}>
+                        <FaSave /> Save
+                      </button>
+                      <button className={styles.cancelButton} onClick={handleCancel}>
+                        <FaTimes /> Cancel
+                      </button>
                     </td>
                   </>
                 ) : (
@@ -205,7 +213,9 @@ export default function DeliveryDashboard() {
                       )
                     ))}
                     <td>
-                      <button className={styles.editButton} onClick={() => handleEditClick(item)}>Edit</button>
+                      <button className={styles.editButton} onClick={() => handleEditClick(item)}>
+                        <FaEdit /> Edit
+                      </button>
                     </td>
                   </>
                 )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import styles from '../reports.module.css';
-import { FaSearch, FaFilter, FaSpinner } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaSpinner, FaCalendarAlt, FaEnvelope, FaWeight, FaMoneyBillWave, FaTruck, FaChartBar } from 'react-icons/fa';
 
 interface DataItem {
   _id: string;
@@ -166,7 +166,10 @@ const Reports: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Delivery Reports</h1>
+      <h1 className={styles.title}>
+        <FaTruck className={styles.titleIcon} />
+        Delivery Reports
+      </h1>
 
       <div className={styles.filterSection}>
         <div className={styles.searchBox}>
@@ -185,58 +188,79 @@ const Reports: React.FC = () => {
       </div>
 
       <dialog id="filterModal" className={styles.filterModal}>
-        <h2 className={styles.modalTitle}>Filter Options</h2>
+        <h2 className={styles.modalTitle}>
+          <FaFilter className={styles.modalTitleIcon} />
+          Filter Options
+        </h2>
         <div className={styles.filterGrid}>
-          <input
-            type="date"
-            name="startDate"
-            value={filter.startDate}
-            onChange={handleFilterChange}
-            className={styles.input}
-            placeholder="Start Date"
-          />
-          <input
-            type="date"
-            name="endDate"
-            value={filter.endDate}
-            onChange={handleFilterChange}
-            className={styles.input}
-            placeholder="End Date"
-          />
-          <select
-            name="status"
-            value={filter.status}
-            onChange={handleFilterChange}
-            className={styles.input}
-          >
-            <option value="all">All Statuses</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Delivered">Delivered</option>
-          </select>
-          <input
-            type="text"
-            name="branch"
-            value={filter.branch}
-            onChange={handleFilterChange}
-            className={styles.input}
-            placeholder="Branch"
-          />
-          <input
-            type="text"
-            name="dpartner"
-            value={filter.dpartner}
-            onChange={handleFilterChange}
-            className={styles.input}
-            placeholder="Delivery Partner"
-          />
-          <input
-            type="text"
-            name="senderName"
-            value={filter.senderName}
-            onChange={handleFilterChange}
-            className={styles.input}
-            placeholder="Sender Name"
-          />
+          <div className={styles.inputWrapper}>
+            <FaCalendarAlt className={styles.inputIcon} />
+            <input
+              type="date"
+              name="startDate"
+              value={filter.startDate}
+              onChange={handleFilterChange}
+              className={styles.input}
+              placeholder="Start Date"
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <FaCalendarAlt className={styles.inputIcon} />
+            <input
+              type="date"
+              name="endDate"
+              value={filter.endDate}
+              onChange={handleFilterChange}
+              className={styles.input}
+              placeholder="End Date"
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <FaTruck className={styles.inputIcon} />
+            <select
+              name="status"
+              value={filter.status}
+              onChange={handleFilterChange}
+              className={styles.input}
+            >
+              <option value="all">All Statuses</option>
+              <option value="In Transit">In Transit</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+          </div>
+          <div className={styles.inputWrapper}>
+            <FaEnvelope className={styles.inputIcon} />
+            <input
+              type="text"
+              name="branch"
+              value={filter.branch}
+              onChange={handleFilterChange}
+              className={styles.input}
+              placeholder="Branch"
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <FaTruck className={styles.inputIcon} />
+            <input
+              type="text"
+              name="dpartner"
+              value={filter.dpartner}
+              onChange={handleFilterChange}
+              className={styles.input}
+              placeholder="Delivery Partner"
+            />
+          </div>
+          <div className={styles.inputWrapper}>
+            <FaEnvelope className={styles.inputIcon} />
+            <input
+              type="text"
+              name="senderName"
+              value={filter.senderName}
+              onChange={handleFilterChange}
+              className={styles.input}
+              placeholder="Sender Name"
+            />
+          </div>
         </div>
         <div className={styles.modalActions}>
           <button onClick={() => (document.getElementById('filterModal') as HTMLDialogElement)?.close()} className={styles.closeButton}>
@@ -247,10 +271,17 @@ const Reports: React.FC = () => {
 
       <div className={styles.dashboardGrid}>
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Summary</h2>
+          <h2 className={styles.cardTitle}>
+            <FaChartBar className={styles.cardTitleIcon} />
+            Summary
+          </h2>
           <div className={styles.summaryGrid}>
             {Object.entries(calculateSummary()).map(([key, value]) => (
               <div key={key} className={styles.summaryItem}>
+                {key === 'totalShipments' && <FaTruck className={styles.summaryIcon} />}
+                {key === 'totalEnvelopes' && <FaEnvelope className={styles.summaryIcon} />}
+                {key === 'totalWeight' && <FaWeight className={styles.summaryIcon} />}
+                {key === 'totalRates' && <FaMoneyBillWave className={styles.summaryIcon} />}
                 <span className={styles.summaryLabel}>{key.replace(/([A-Z])/g, ' $1').trim()}</span>
                 <span className={styles.summaryValue}>{value.toFixed(2)}</span>
               </div>
@@ -259,37 +290,46 @@ const Reports: React.FC = () => {
         </div>
 
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>Monthly Billing</h2>
+          <h2 className={styles.cardTitle}>
+            <FaMoneyBillWave className={styles.cardTitleIcon} />
+            Monthly Billing
+          </h2>
           <div className={styles.monthYearSelectors}>
-            <select
-              name="selectedMonth"
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              className={styles.input}
-            >
-              <option value="">Select Month</option>
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
-                  {format(new Date(2000, i, 1), 'MMMM')}
-                </option>
-              ))}
-            </select>
-            <select
-              name="selectedYear"
-              value={selectedYear}
-              onChange={handleYearChange}
-              className={styles.input}
-            >
-              <option value="">Select Year</option>
-              {Array.from({ length: 10 }, (_, i) => {
-                const year = new Date().getFullYear() - i;
-                return (
-                  <option key={year} value={year.toString()}>
-                    {year}
+            <div className={styles.inputWrapper}>
+              <FaCalendarAlt className={styles.inputIcon} />
+              <select
+                name="selectedMonth"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+                className={styles.input}
+              >
+                <option value="">Select Month</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
+                    {format(new Date(2000, i, 1), 'MMMM')}
                   </option>
-                );
-              })}
-            </select>
+                ))}
+              </select>
+            </div>
+            <div className={styles.inputWrapper}>
+              <FaCalendarAlt className={styles.inputIcon} />
+              <select
+                name="selectedYear"
+                value={selectedYear}
+                onChange={handleYearChange}
+                className={styles.input}
+              >
+                <option value="">Select Year</option>
+                {Array.from({ length: 10 }, (_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return (
+                    <option key={year} value={year.toString()}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           </div>
           <ul className={styles.billingList}>
             {Object.entries(calculateMonthlyBilling()).map(([month, total]) => (
@@ -303,7 +343,10 @@ const Reports: React.FC = () => {
       </div>
 
       <div className={styles.tableContainer}>
-        <h2 className={styles.tableTitle}>Delivery List</h2>
+        <h2 className={styles.tableTitle}>
+          <FaTruck className={styles.tableTitleIcon} />
+          Delivery List
+        </h2>
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
             <thead>

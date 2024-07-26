@@ -1,3 +1,4 @@
+/* dashboard.module.css */
 .dashboard {
   max-width: 800px;
   margin: 5rem auto;
@@ -36,25 +37,47 @@
 }
 
 .actionButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #66bb6a;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+  padding: 1rem;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
+  transition: all 0.3s ease;
   font-size: 1rem;
   font-weight: bold;
   text-transform: uppercase;
+  width: 180px;
+  height: 120px;
 }
 
 .actionButton:hover {
   background-color: #5aae61;
-  transform: translateY(-2px);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buttonIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 @media (max-width: 768px) {
   .actionButton {
     width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1rem 1.5rem;
+  }
+
+  .buttonIcon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    margin-bottom: 0;
   }
 }
