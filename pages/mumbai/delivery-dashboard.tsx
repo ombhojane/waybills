@@ -23,6 +23,10 @@ interface DataItem {
   deliveryDate: string;
   deliveryStatus: string;
   [key: string]: any;
+  feedback?: {
+    rating: number;
+    message: string;
+  };
 }
 
 export default function DeliveryDashboard() {
@@ -158,70 +162,81 @@ export default function DeliveryDashboard() {
               <th>Delivery Date</th>
               <th>Delivery Status</th>
               <th>Actions</th>
+              <th>Feedback</th>
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((item, index) => (
-              <tr key={index}>
-                {editId === item._id ? (
-                  <>
-                    {Object.keys(editFormData || {}).map(key => (
-                      key !== '_id' && (
-                        <td key={key}>
-                          {key === 'deliveryStatus' ? (
-                            <select
-                              name={key}
-                              value={(editFormData as DataItem)[key]}
-                              onChange={handleChange}
-                              className={styles.editInput}
-                            >
-                              <option value="In Transit">In Transit</option>
-                              <option value="Delivered">Delivered</option>
-                            </select>
-                          ) : (
-                            <input
-                              type="text"
-                              name={key}
-                              value={(editFormData as DataItem)[key]}
-                              onChange={handleChange}
-                              className={styles.editInput}
-                            />
-                          )}
-                        </td>
-                      )
-                    ))}
-                    <td>
-                      <button className={styles.saveButton} onClick={handleSave}>
-                        <FaSave /> Save
-                      </button>
-                      <button className={styles.cancelButton} onClick={handleCancel}>
-                        <FaTimes /> Cancel
-                      </button>
-                    </td>
-                  </>
+  {filteredData.map((item, index) => (
+    <tr key={index}>
+      {editId === item._id ? (
+        <>
+          {Object.keys(editFormData || {}).map(key => (
+            key !== '_id' && key !== 'feedback' && (
+              <td key={key}>
+                {key === 'deliveryStatus' ? (
+                  <select
+                    name={key}
+                    value={(editFormData as DataItem)[key]}
+                    onChange={handleChange}
+                    className={styles.editInput}
+                  >
+                    <option value="In Transit">In Transit</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
                 ) : (
-                  <>
-                    {Object.entries(item).map(([key, value], idx) => (
-                      key !== '_id' && (
-                        <td key={idx}>
-                          {key === 'deliveryStatus' ? (
-                            <span className={`${styles.status} ${styles[value.toLowerCase().replace(' ', '')]}`}>
-                              {value}
-                            </span>
-                          ) : value}
-                        </td>
-                      )
-                    ))}
-                    <td>
-                      <button className={styles.editButton} onClick={() => handleEditClick(item)}>
-                        <FaEdit /> Edit
-                      </button>
-                    </td>
-                  </>
+                  <input
+                    type="text"
+                    name={key}
+                    value={(editFormData as DataItem)[key]}
+                    onChange={handleChange}
+                    className={styles.editInput}
+                  />
                 )}
-              </tr>
-            ))}
-          </tbody>
+              </td>
+            )
+          ))}
+          <td>
+            <button className={styles.saveButton} onClick={handleSave}>
+              <FaSave /> Save
+            </button>
+            <button className={styles.cancelButton} onClick={handleCancel}>
+              <FaTimes /> Cancel
+            </button>
+          </td>
+          <td>N/A</td>
+        </>
+      ) : (
+        <>
+          {Object.entries(item).map(([key, value], idx) => (
+            key !== '_id' && key !== 'feedback' && (
+              <td key={idx}>
+                {key === 'deliveryStatus' ? (
+                  <span className={`${styles.status} ${styles[value.toLowerCase().replace(' ', '')]}`}>
+                    {value}
+                  </span>
+                ) : value}
+              </td>
+            )
+          ))}
+          <td>
+            <button className={styles.editButton} onClick={() => handleEditClick(item)}>
+              <FaEdit /> Edit
+            </button>
+          </td>
+          <td>
+            {item.feedback ? (
+              <>
+                <span>Rating: {item.feedback.rating}/5</span>
+                <br />
+                <span>Message: {item.feedback.message}</span>
+              </>
+            ) : 'N/A'}
+          </td>
+        </>
+      )}
+    </tr>
+  ))}
+</tbody>
         </table>
       </div>
     </div>
