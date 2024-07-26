@@ -44,7 +44,7 @@ const FeedbackPage = () => {
 
   const submitFeedback = async () => {
     try {
-      const response = await axios.post(`/api/waybill/submitFeedback/${id}`, { rating, message });
+      const response = await axios.post(`/api/waybill/submitFeedback/mumbai/${id}`, { rating, message });
       alert(response.data.message);
       fetchWaybillData(id as string);
     } catch (error) {
