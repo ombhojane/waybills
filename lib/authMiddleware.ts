@@ -1,37 +1,27 @@
 // lib/authMiddleware.ts
-import { NextApiRequest, NextApiResponse, NextPageContext } from 'next';
-import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
+import { NextPageContext } from 'next';
 
-const secretKey = 'your-secret-key'; // Use an environment variable for the secret key
-
-export function authenticateToken(req: NextApiRequest) {
-  const cookies = cookie.parse(req.headers.cookie || '');
-  const token = cookies.token;
-
-  if (!token) {
-    return null;
+export function getUserData() {
+  if (typeof window !== 'undefined') {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
   }
-
-  try {
-    const decoded = jwt.verify(token, secretKey);
-    return decoded;
-  } catch (err) {
-    console.error('Invalid token:', err);
-    return null;
-  }
+  return null;
 }
 
 export function requireAuth(context: NextPageContext) {
-  const { req, res } = context;
-  const user = authenticateToken(req as NextApiRequest);
+  const { res } = context;
+  const userData = getUserData();
 
-  if (!user) {
+  if (!userData) {
     if (res) {
       res.writeHead(302, { Location: '/login' });
       res.end();
+    } else if (typeof window !== 'undefined') {
+      window.location.href = '/login';
     }
+    return null;
   }
 
-  return user;
+  return userData;
 }
