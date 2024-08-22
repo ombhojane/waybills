@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from '../dashboard.module.css';
 import { FaUserCog, FaClipboardList, FaChartBar, FaTasks, FaTruck, FaShoppingCart, FaSearchLocation } from 'react-icons/fa';
+import { getUserData } from '../../lib/authMiddleware';
 
 interface User {
   name: string;
   role: 'admin' | 'delivery' | 'client';
+  branch: string;
 }
 
 interface DashboardButton {
@@ -17,14 +19,16 @@ interface DashboardButton {
 
 const BKCDashboard: React.FC = () => {
   const router = useRouter();
-  const { name, role } = router.query;
-  const [user, setUser] = React.useState<User>({ name: 'User', role: 'client' });
+  const [user, setUser] = useState<User | null>(null);
 
-  React.useEffect(() => {
-    if (name && role) {
-      setUser({ name: name as string, role: role as 'admin' | 'delivery' | 'client' });
+  useEffect(() => {
+    const userData = getUserData();
+    if (userData && userData.branch.toLowerCase() === 'bkc') {
+      setUser(userData as User);
+    } else {
+      router.push('/onboarding');
     }
-  }, [name, role]);
+  }, [router]);
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
@@ -42,13 +46,17 @@ const BKCDashboard: React.FC = () => {
     ],
   };
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
         <Image src="https://i.ibb.co/2cck053/gate-of-india.png" alt="BKC Icon" width={50} height={50} />
         <h1 className={styles.title}>BKC Dashboard</h1>
       </div>
-      {user && <p className={styles.welcome}>Welcome, {user.name}</p>}
+      <p className={styles.welcome}>Welcome, {user.name}</p>
       <div className={styles.buttonContainer}>
         {dashboardButtons[user.role].map((button, index) => (
           <button key={index} className={styles.actionButton} onClick={button.onClick}>

@@ -1,38 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from '../dashboard.module.css';
+import { FaUserCog, FaClipboardList, FaChartBar, FaTasks, FaTruck, FaShoppingCart, FaSearchLocation } from 'react-icons/fa';
+import { getUserData } from '../../lib/authMiddleware';
 
 interface User {
   name: string;
   role: 'admin' | 'delivery' | 'client';
+  branch: string;
 }
 
 interface DashboardButton {
   label: string;
   onClick: () => void;
+  icon: React.ReactElement;
 }
 
 const AhmedabadDashboard: React.FC = () => {
   const router = useRouter();
-  const { name } = router.query;
-  const [user] = React.useState<User>({ name: name as string || 'User', role: 'admin' });
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = getUserData();
+    if (userData && userData.branch.toLowerCase() === 'ahmedabad') {
+      setUser(userData as User);
+    } else {
+      router.push('/onboarding');
+    }
+  }, [router]);
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
-      { label: 'Manage Users', onClick: () => router.push('/ahmedabad/add') },
-      { label: 'View Orders', onClick: () => router.push('/ahmedabad/delivery-dashboard') },
-      { label: 'View Reports', onClick: () => router.push('/ahmedabad/reports') },
+      { label: 'Manage Users', onClick: () => router.push('/ahmedabad/add'), icon: <FaUserCog /> },
+      { label: 'View Orders', onClick: () => router.push('/ahmedabad/delivery-dashboard'), icon: <FaClipboardList /> },
+      { label: 'View Reports', onClick: () => router.push('/ahmedabad/reports'), icon: <FaChartBar /> },
     ],
     delivery: [
-      { label: 'View Assignments', onClick: () => console.log('View Assignments') },
-      { label: 'Update Delivery Status', onClick: () => console.log('Update Delivery Status') },
+      { label: 'View Assignments', onClick: () => console.log('View Assignments'), icon: <FaTasks /> },
+      { label: 'Update Delivery Status', onClick: () => router.push('/ahmedabad/del-update'), icon: <FaTruck /> },
     ],
     client: [
-      { label: 'Place Order', onClick: () => console.log('Place Order') },
-      { label: 'Track Order', onClick: () => console.log('Track Order') },
+      { label: 'Place Order', onClick: () => console.log('Place Order'), icon: <FaShoppingCart /> },
+      { label: 'Track Order', onClick: () => console.log('Track Order'), icon: <FaSearchLocation /> },
     ],
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.dashboard}>
@@ -40,10 +56,11 @@ const AhmedabadDashboard: React.FC = () => {
         <Image src="https://i.ibb.co/mNYKcsG/ahmedabad-building-icon-elegant-retro-symmetric-design-56053.jpg" alt="Ahmedabad Icon" width={100} height={100} />
         <h1 className={styles.title}>Ahmedabad Dashboard</h1>
       </div>
-      {user && <p className={styles.welcome}>Welcome, {user.name}</p>}
+      <p className={styles.welcome}>Welcome, {user.name}</p>
       <div className={styles.buttonContainer}>
         {dashboardButtons[user.role].map((button, index) => (
           <button key={index} className={styles.actionButton} onClick={button.onClick}>
+            <span className={styles.buttonIcon}>{button.icon}</span>
             {button.label}
           </button>
         ))}
