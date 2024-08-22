@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from './auth.module.css';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      router.push('/mumbai');
-    }
-  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,9 +24,9 @@ export default function Login() {
       setLoading(false);
 
       if (response.data.success) {
-        Cookies.set('token', response.data.token, { expires: 7 });
-
-        router.push('/mumbai');
+        // Store user data in localStorage
+        localStorage.setItem('userData', JSON.stringify(response.data.user));
+        router.push('/onboarding');
       } else {
         setError(response.data.message || 'Login failed. Please try again.');
       }
@@ -43,6 +35,7 @@ export default function Login() {
       setError('An error occurred. Please try again.');
     }
   };
+
 
   return (
     <div className={styles.page}>

@@ -1,10 +1,6 @@
 import { MongoClient } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
-
-const secretKey = 'your-secret-key'; // Use an environment variable for the secret key
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -33,21 +29,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
       }
 
-      // Generate JWT token
-      const token = jwt.sign({ email: user.email, name: user.name, role: user.role, branch: user.branch }, secretKey, { expiresIn: '7d' });
-
       console.log('Login successful for user:', email, 'Branch:', user.branch, 'Role:', user.role);
 
-      // Set cookie with token
-      res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-        sameSite: 'strict',
-        path: '/'
-      }));
-
-      res.status(200).json({ success: true });
+      res.status(200).json({
+        success: true,
+        user: {
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          branch: user.branch.toLowerCase()
+        }
+      });
     } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ success: false, message: 'An error occurred during login' });
