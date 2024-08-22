@@ -1,14 +1,15 @@
 // mumbai/index.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from '../dashboard.module.css';
 import { FaUserCog, FaClipboardList, FaChartBar, FaTasks, FaTruck, FaShoppingCart, FaSearchLocation } from 'react-icons/fa';
-import { requireAuth } from '../.././lib/authMiddleware';
+import { getUserData } from '../../lib/authMiddleware';
 
 interface User {
   name: string;
   role: 'admin' | 'delivery' | 'client';
+  branch: string;
 }
 
 interface DashboardButton {
@@ -17,8 +18,18 @@ interface DashboardButton {
   icon: React.ReactElement;
 }
 
-const MumbaiDashboard: React.FC<{ user: User }> = ({ user }) => {
+const MumbaiDashboard: React.FC = () => {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userData = getUserData();
+    if (userData && userData.branch.toLowerCase() === 'mumbai') {
+      setUser(userData as User);
+    } else {
+      router.push('/onboarding');
+    }
+  }, [router]);
 
   const dashboardButtons: Record<User['role'], DashboardButton[]> = {
     admin: [
@@ -36,13 +47,17 @@ const MumbaiDashboard: React.FC<{ user: User }> = ({ user }) => {
     ],
   };
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.header}>
         <Image src="https://i.ibb.co/2cck053/gate-of-india.png" alt="Mumbai Icon" width={50} height={50} />
         <h1 className={styles.title}>Mumbai Dashboard</h1>
       </div>
-      {user && <p className={styles.welcome}>Welcome, {user.name}</p>}
+      <p className={styles.welcome}>Welcome, {user.name}</p>
       <div className={styles.buttonContainer}>
         {dashboardButtons[user.role].map((button, index) => (
           <button key={index} className={styles.actionButton} onClick={button.onClick}>
@@ -54,13 +69,5 @@ const MumbaiDashboard: React.FC<{ user: User }> = ({ user }) => {
     </div>
   );
 };
-
-export async function getServerSideProps(context: any) {
-  const user = requireAuth(context);
-
-  return {
-    props: { user },
-  };
-}
 
 export default MumbaiDashboard;
